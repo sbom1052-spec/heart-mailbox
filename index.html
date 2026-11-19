@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>우리의 고백 게시판</title>
 
-<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
@@ -18,7 +18,9 @@
   --line:#ffc1df;
 }
 
-* { box-sizing:border-box; }
+* {
+  box-sizing:border-box;
+}
 
 html, body {
   margin:0;
@@ -37,9 +39,9 @@ body {
   padding:0 0 24px;
 }
 
-/* 곰돌이 배경 영역 */
+/* 상단 곰돌이 배경 */
 .hero {
-  height:290px;
+  height:240px;
   width:100vw;
   margin-left:calc((1170px - 100vw)/2);
   background:transparent;
@@ -48,7 +50,6 @@ body {
 /* 고백 작성 영역 */
 .composer {
   position:relative;
-  height:auto;
   min-height:136px;
   margin:0 0 11px;
   padding:20px 30px 13px;
@@ -72,13 +73,12 @@ body {
   font-weight:800;
   text-align:center;
   line-height:34px;
-  box-shadow:0 2px 5px rgba(221,89,153,.18);
   z-index:2;
 }
 
 .composer-top {
   display:grid;
-  grid-template-columns:105px minmax(0,275px) 175px;
+  grid-template-columns:105px minmax(0,275px) minmax(0,175px);
   gap:12px;
   align-items:center;
   margin-bottom:9px;
@@ -98,7 +98,8 @@ body {
   margin-right:7px;
 }
 
-#target, #postPassword {
+#target,
+#postPassword {
   width:100%;
   min-width:0;
   height:35px;
@@ -131,12 +132,15 @@ body {
   color:var(--ink);
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   outline:2px solid #ffd0e6;
   border-color:#f45ca6;
 }
 
-::placeholder { color:#a69aaa; }
+::placeholder {
+  color:#a69aaa;
+}
 
 .submit {
   height:60px;
@@ -168,7 +172,7 @@ button:disabled {
   font-size:12px;
 }
 
-/* 게시글 */
+/* 게시글 목록 */
 .posts {
   display:grid;
   gap:9px;
@@ -200,7 +204,9 @@ button:disabled {
   font-weight:900;
 }
 
-.post-main { min-width:0; }
+.post-main {
+  min-width:0;
+}
 
 .post-head {
   display:flex;
@@ -210,7 +216,7 @@ button:disabled {
   margin:1px 0 4px;
 }
 
-.target {
+.target-name {
   font-size:17px;
   font-weight:800;
   color:#38203e;
@@ -230,17 +236,37 @@ button:disabled {
   overflow-wrap:anywhere;
 }
 
+/* 게시글 삭제 버튼 */
 .post-actions {
-  text-align:right;
-  margin-top:-3px;
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:8px;
+  margin:4px 0;
 }
 
 .delete-button {
-  border:0;
-  background:transparent;
-  color:#a99aaa;
+  border:1px solid #f4c5dc;
+  background:#fff7fb;
+  color:#a56b89;
+  border-radius:6px;
   font-size:11px;
-  padding:3px 5px;
+  padding:5px 9px;
+}
+
+.admin-delete-button {
+  border:1px solid #f2a5c9;
+  background:#fff0f7;
+  color:#d32d7d;
+  border-radius:6px;
+  font-size:11px;
+  font-weight:800;
+  padding:5px 10px;
+}
+
+.delete-button:hover,
+.admin-delete-button:hover {
+  background:#ffe0ef;
 }
 
 /* 댓글 */
@@ -254,7 +280,9 @@ button:disabled {
   border-bottom:1px solid #f8e1ed;
 }
 
-.comment:last-child { border:0; }
+.comment:last-child {
+  border:0;
+}
 
 .comment-top {
   display:flex;
@@ -271,7 +299,9 @@ button:disabled {
   overflow-wrap:anywhere;
 }
 
-.comment-actions { text-align:right; }
+.comment-actions {
+  text-align:right;
+}
 
 .comment-area {
   display:flex;
@@ -338,35 +368,22 @@ button:disabled {
   font:700 20px "Gaegu",cursive;
 }
 
-.admin-area {
-  margin-top:9px;
-  font-family:"Pretendard",sans-serif;
-}
-
-.admin-login {
-  padding:5px;
-  border:0;
-  background:transparent;
-  color:#a88b9b;
-  font-size:10px;
-}
-
-/* PC 및 태블릿 */
-@media(max-width:1170px) {
-  .hero { margin-left:-20px; }
-}
-
 /* 모바일 */
+@media(max-width:1170px) {
+  .hero {
+    margin-left:-20px;
+  }
+}
+
 @media(max-width:700px) {
   .page {
     width:calc(100% - 24px);
   }
 
   .hero {
-    height:240px;
+    height:190px;
     margin-left:-12px;
     width:100vw;
-    background:transparent;
   }
 
   .composer {
@@ -381,7 +398,6 @@ button:disabled {
     height:32px;
     font-size:13px;
     line-height:32px;
-    border-radius:7px;
   }
 
   .composer-top {
@@ -390,12 +406,9 @@ button:disabled {
     margin-bottom:9px;
   }
 
-  #target { width:100%; }
-
   #postPassword {
     grid-column:2;
-    width:175px;
-    max-width:100%;
+    width:100%;
   }
 
   .composer-bottom {
@@ -412,7 +425,9 @@ button:disabled {
     min-height:55px;
   }
 
-  .submit { height:48px; }
+  .submit {
+    height:48px;
+  }
 
   .post {
     grid-template-columns:54px minmax(0,1fr);
@@ -427,68 +442,107 @@ button:disabled {
     font-size:22px;
   }
 
-  .comment-area { flex-wrap:wrap; }
+  .comment-area {
+    flex-wrap:wrap;
+  }
 
   .comment-form {
     flex-basis:100%;
-    grid-template-columns:minmax(0,1fr) 145px auto;
+    grid-template-columns:minmax(0,1fr) 115px auto;
+  }
+
+  .post-head {
+    align-items:flex-start;
   }
 }
 
 @media(max-width:420px) {
-  .hero { height:190px; }
+  .hero {
+    height:190px;
+  }
 
   .post-head {
-    align-items:flex-start;
     flex-direction:column;
     gap:3px;
   }
 
-  .post-content { font-size:14px; }
+  .post-content {
+    font-size:14px;
+  }
+
+  .comment-form {
+    grid-template-columns:minmax(0,1fr) 100px auto;
+  }
 }
 </style>
 </head>
 
 <body>
+
 <main class="page">
 
-  <header class="hero" role="img" aria-label="곰돌이와 하트가 있는 핑크색 배경"></header>
+  <!-- 상단 배경 -->
+  <header class="hero" aria-label="곰돌이와 하트 배경"></header>
 
   <!-- 고백 작성 -->
   <section class="composer">
+
     <form id="confessionForm">
 
       <div class="composer-top">
-        <label class="field-label" for="target">상대방 닉네임</label>
 
-        <input id="target" type="text"
+        <label class="field-label" for="target">
+          상대방 닉네임
+        </label>
+
+        <input
+          id="target"
+          type="text"
           maxlength="40"
-          placeholder="상대방 닉네임"
-          required>
+          placeholder="예) 그사람, 내짝꿍 등"
+          required
+        >
 
-        <input id="postPassword" type="password"
+        <input
+          id="postPassword"
+          type="password"
           minlength="4"
           maxlength="50"
           autocomplete="new-password"
-          placeholder="비밀번호(4자 이상)"
-          required>
+          placeholder="삭제 비밀번호"
+          required
+          aria-label="게시글 삭제 비밀번호"
+        >
+
       </div>
 
       <div class="composer-bottom">
-        <label class="field-label" for="content">고백 내용</label>
 
-        <textarea id="content"
+        <label class="field-label" for="content">
+          고백 내용
+        </label>
+
+        <textarea
+          id="content"
           maxlength="1500"
           placeholder="하고 싶은 말을 적어주세요... 💕"
-          required></textarea>
+          required
+        ></textarea>
 
-        <button class="submit" id="submitButton" type="submit">
+        <button
+          class="submit"
+          id="submitButton"
+          type="submit"
+        >
           ✎ 등록하기
         </button>
+
       </div>
 
       <div class="status" id="formStatus" aria-live="polite"></div>
+
     </form>
+
   </section>
 
   <!-- 게시글 목록 -->
@@ -498,19 +552,17 @@ button:disabled {
 
   <footer class="footer">
     💗 좋은 마음이 모여 더 따뜻한 모임이 되길 바라요 💗
-
-    <div class="admin-area">
-      <button id="adminDeleteAllButton" class="admin-login" type="button">
-        관리자 모드
-      </button>
-    </div>
   </footer>
 
 </main>
 
 <script>
+/* =================================
+   Supabase 연결
+================================= */
+
 const SUPABASE_URL =
-"https://https://dxxbhfzcjxfozlwefyyr.supabase.co";
+"https://vuvzchrhbdgtsfjoobrb.supabase.co";
 
 const SUPABASE_ANON_KEY =
 "sb_publishable_E0GSkkS2vp-oknFC9nfvAg_Ky-JhpBH";
@@ -523,6 +575,11 @@ const db = window.supabase.createClient(
 const postList = document.getElementById("postList");
 const formStatus = document.getElementById("formStatus");
 
+
+/* =================================
+   HTML 문자 처리
+================================= */
+
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
     "&":"&amp;",
@@ -533,6 +590,11 @@ function escapeHTML(value) {
   }[char]));
 }
 
+
+/* =================================
+   날짜 표시
+================================= */
+
 function formatDate(value) {
   return new Date(value).toLocaleString("ko-KR", {
     month:"long",
@@ -542,8 +604,14 @@ function formatDate(value) {
   });
 }
 
-// 게시글 등록
-document.getElementById("confessionForm").addEventListener("submit", async function(event) {
+
+/* =================================
+   게시글 등록
+================================= */
+
+document.getElementById("confessionForm")
+.addEventListener("submit", async function(event) {
+
   event.preventDefault();
 
   const target = document.getElementById("target").value.trim();
@@ -551,15 +619,18 @@ document.getElementById("confessionForm").addEventListener("submit", async funct
   const password = document.getElementById("postPassword").value;
 
   if (!target || !content || password.length < 4) {
-    formStatus.textContent = "닉네임, 고백 내용과 비밀번호(4자 이상)를 입력해 주세요.";
+    formStatus.textContent =
+      "닉네임, 고백 내용과 비밀번호(4자 이상)를 입력해 주세요.";
     return;
   }
 
   const button = document.getElementById("submitButton");
+
   button.disabled = true;
   formStatus.textContent = "고백을 등록하고 있습니다...";
 
   try {
+
     const { error } = await db.rpc("create_confession", {
       p_target_nickname:target,
       p_content:content,
@@ -569,22 +640,33 @@ document.getElementById("confessionForm").addEventListener("submit", async funct
     if (error) throw error;
 
     this.reset();
+
     formStatus.textContent = "고백이 등록되었습니다. 💗";
+
     await loadPosts();
 
   } catch(error) {
+
     console.error("게시글 등록 오류:",error);
+
     formStatus.textContent =
       "등록 실패: " + (error.message || "Supabase 설정을 확인해 주세요.");
 
   } finally {
+
     button.disabled = false;
+
   }
+
 });
 
 
-// 게시글 및 댓글 불러오기
+/* =================================
+   게시글 및 댓글 불러오기
+================================= */
+
 async function loadPosts() {
+
   const { data:posts, error } = await db
     .from("confessions")
     .select("id,target_nickname,content,created_at")
@@ -592,15 +674,20 @@ async function loadPosts() {
     .limit(100);
 
   if (error) {
+
     console.error("게시글 조회 오류:",error);
+
     postList.innerHTML =
       '<div class="empty">게시글을 불러오지 못했습니다.</div>';
+
     return;
   }
 
   if (!posts || posts.length === 0) {
+
     postList.innerHTML =
       '<div class="empty">아직 도착한 고백이 없어요.<br>첫 번째 마음을 전해보세요 💗</div>';
+
     return;
   }
 
@@ -619,11 +706,13 @@ async function loadPosts() {
   const safeComments = comments || [];
 
   postList.innerHTML = posts.map(post => {
+
     const list = safeComments.filter(
       comment => comment.confession_id === post.id
     );
 
     return `
+
       <article class="post">
 
         <div class="heart-count">♡</div>
@@ -631,25 +720,51 @@ async function loadPosts() {
         <div class="post-main">
 
           <div class="post-head">
-            <span class="target">${escapeHTML(post.target_nickname)}</span>
-            <span class="date">◷ ${formatDate(post.created_at)}</span>
+
+            <span class="target-name">
+              ${escapeHTML(post.target_nickname)}
+            </span>
+
+            <span class="date">
+              ◷ ${formatDate(post.created_at)}
+            </span>
+
           </div>
 
           <p class="post-content">${escapeHTML(post.content)}</p>
 
           <div class="post-actions">
-            <button class="delete-button" type="button"
-              onclick="deletePost('${post.id}')">
+
+            <button
+              class="delete-button"
+              type="button"
+              onclick="deletePost('${post.id}')"
+            >
               본인 삭제
             </button>
+
+            <button
+              class="admin-delete-button"
+              type="button"
+              onclick="adminDeletePost('${post.id}')"
+            >
+              관리자 삭제
+            </button>
+
           </div>
 
           <div class="comments">
+
             ${list.map(comment => `
+
               <div class="comment">
+
                 <div class="comment-top">
+
                   <span>익명</span>
+
                   <span>${formatDate(comment.created_at)}</span>
+
                 </div>
 
                 <div class="comment-content">
@@ -657,69 +772,108 @@ async function loadPosts() {
                 </div>
 
                 <div class="comment-actions">
-                  <button class="delete-button" type="button"
-                    onclick="deleteComment('${comment.id}')">
+
+                  <button
+                    class="delete-button"
+                    type="button"
+                    onclick="deleteComment('${comment.id}')"
+                  >
                     본인 삭제
                   </button>
+
                 </div>
+
               </div>
+
             `).join("")}
+
           </div>
 
           <div class="comment-area">
-            <span class="comment-count">댓글 ${list.length}개</span>
 
-            <form class="comment-form" data-post-id="${post.id}">
-              <input name="comment"
+            <span class="comment-count">
+              댓글 ${list.length}개
+            </span>
+
+            <form
+              class="comment-form"
+              data-post-id="${post.id}"
+            >
+
+              <input
+                name="comment"
                 maxlength="500"
                 placeholder="댓글을 입력해보세요..."
-                required>
+                required
+              >
 
-              <input name="password"
+              <input
+                name="password"
                 type="password"
                 minlength="4"
                 maxlength="50"
                 autocomplete="new-password"
-                placeholder="비밀번호(4자 이상)"
+                placeholder="삭제 비밀번호"
                 required
-                aria-label="댓글 삭제 비밀번호">
+                aria-label="댓글 삭제 비밀번호"
+              >
 
               <button type="submit">등록</button>
+
             </form>
+
           </div>
 
         </div>
+
       </article>
+
     `;
+
   }).join("");
 
+
   document.querySelectorAll(".comment-form").forEach(form => {
+
     form.addEventListener("submit",addComment);
+
   });
+
 }
 
 
-// 댓글 등록
+/* =================================
+   댓글 등록
+================================= */
+
 async function addComment(event) {
+
   event.preventDefault();
 
   const form = event.currentTarget;
+
   const content = form.elements.comment.value.trim();
   const password = form.elements.password.value;
 
   if (!content || password.length < 4) {
+
     alert("댓글과 비밀번호(4자 이상)를 입력해 주세요.");
+
     return;
   }
 
   const button = form.querySelector("button");
+
   button.disabled = true;
 
   try {
+
     const { error } = await db.rpc("create_comment", {
+
       p_confession_id:form.dataset.postId,
       p_content:content,
       p_password:password
+
     });
 
     if (error) throw error;
@@ -727,15 +881,24 @@ async function addComment(event) {
     await loadPosts();
 
   } catch(error) {
+
     console.error("댓글 등록 오류:",error);
+
     alert("댓글 등록 실패: " + (error.message || "다시 시도해 주세요."));
+
     button.disabled = false;
+
   }
+
 }
 
 
-// 본인 게시글 삭제
+/* =================================
+   본인 게시글 삭제
+================================= */
+
 async function deletePost(postId) {
+
   const password = prompt(
     "게시글 작성 시 설정한 삭제 비밀번호를 입력해 주세요."
   );
@@ -743,37 +906,53 @@ async function deletePost(postId) {
   if (password === null) return;
 
   if (!password) {
+
     alert("비밀번호를 입력해 주세요.");
+
     return;
   }
 
   if (!confirm("이 게시글과 댓글을 모두 삭제할까요?")) return;
 
   try {
+
     const { data,error } = await db.rpc("delete_confession", {
+
       p_post_id:postId,
       p_password:password
+
     });
 
     if (error) throw error;
 
     if (data !== true) {
+
       alert("비밀번호가 일치하지 않거나 삭제할 수 없는 게시글입니다.");
+
       return;
     }
 
     alert("게시글이 삭제되었습니다.");
+
     await loadPosts();
 
   } catch(error) {
+
     console.error("게시글 삭제 오류:",error);
+
     alert("게시글 삭제 실패: " + (error.message || "다시 시도해 주세요."));
+
   }
+
 }
 
 
-// 본인 댓글 삭제
+/* =================================
+   본인 댓글 삭제
+================================= */
+
 async function deleteComment(commentId) {
+
   const password = prompt(
     "댓글 작성 시 설정한 삭제 비밀번호를 입력해 주세요."
   );
@@ -781,96 +960,116 @@ async function deleteComment(commentId) {
   if (password === null) return;
 
   if (!password) {
+
     alert("비밀번호를 입력해 주세요.");
+
     return;
   }
 
   if (!confirm("이 댓글을 삭제할까요?")) return;
 
   try {
+
     const { data,error } = await db.rpc("delete_comment", {
+
       p_comment_id:commentId,
       p_password:password
+
     });
 
     if (error) throw error;
 
     if (data !== true) {
+
       alert("비밀번호가 일치하지 않거나 삭제할 수 없는 댓글입니다.");
+
       return;
     }
 
     alert("댓글이 삭제되었습니다.");
+
     await loadPosts();
 
   } catch(error) {
+
     console.error("댓글 삭제 오류:",error);
+
     alert("댓글 삭제 실패: " + (error.message || "다시 시도해 주세요."));
+
   }
+
 }
 
 
-// 관리자 전체 게시글 및 댓글 삭제
-document.getElementById("adminDeleteAllButton")
-.addEventListener("click", async function() {
+/* =================================
+   관리자 게시글별 삭제
+   admin_delete_one 함수 사용
+================================= */
+
+async function adminDeletePost(postId) {
 
   const confirmed = confirm(
-    "정말 모든 게시글과 댓글을 삭제하시겠습니까?\n삭제 후 복구할 수 없습니다."
+    "선택한 게시글과 그 게시글의 댓글만 삭제합니다.\n\n계속하시겠습니까?"
   );
 
   if (!confirmed) return;
 
   const password = prompt(
-    "Supabase에 설정한 관리자 마스터 비밀번호를 입력해 주세요."
+    "관리자 마스터 비밀번호를 입력해 주세요."
   );
 
   if (password === null) return;
 
   if (!password) {
+
     alert("관리자 비밀번호를 입력해 주세요.");
+
     return;
   }
 
-  const button = this;
-  button.disabled = true;
-
   try {
-    const { data,error } = await db.rpc("admin_delete_all", {
+
+    const { data,error } = await db.rpc("admin_delete_one", {
+
+      p_post_id:postId,
       p_password:password
+
     });
 
-    if (error) {
-      console.error("관리자 전체 삭제 오류:",error);
+    if (error) throw error;
 
-      alert(
-        "전체 삭제에 실패했습니다.\n" +
-        "오류 코드: " + (error.code || "없음") + "\n" +
-        "오류 내용: " + (error.message || "알 수 없는 오류")
-      );
+    if (data !== true) {
+
+      alert("관리자 비밀번호가 틀렸거나 게시글을 찾을 수 없습니다.");
 
       return;
     }
 
-    if (data === true) {
-      alert("모든 게시글과 댓글이 삭제되었습니다.");
-      await loadPosts();
-    } else {
-      alert("관리자 비밀번호가 일치하지 않습니다.");
-    }
+    alert("선택한 게시글과 댓글이 삭제되었습니다.");
+
+    await loadPosts();
 
   } catch(error) {
-    console.error("관리자 전체 삭제 예외:",error);
-    alert("관리자 전체 삭제 중 오류가 발생했습니다: " + error.message);
 
-  } finally {
-    button.disabled = false;
+    console.error("관리자 게시글 삭제 오류:",error);
+
+    alert(
+      "관리자 삭제 실패\n" +
+      (error.message || "Supabase 함수와 권한을 확인해 주세요.")
+    );
+
   }
-});
+
+}
 
 
-// 처음 화면을 열 때 게시글 불러오기
+/* =================================
+   최초 실행
+================================= */
+
 loadPosts();
 
 </script>
+
 </body>
 </html>
