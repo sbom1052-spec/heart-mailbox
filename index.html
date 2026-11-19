@@ -18,11 +18,9 @@
   --line:#ffc1df;
 }
 
-* {
-  box-sizing:border-box;
-}
+* { box-sizing:border-box; }
 
-html, body {
+html,body {
   margin:0;
   min-height:100%;
 }
@@ -39,12 +37,11 @@ body {
   padding:0 0 24px;
 }
 
-/* 상단 곰돌이 배경 */
+/* 상단 배경 */
 .hero {
   height:240px;
   width:100vw;
   margin-left:calc((1170px - 100vw)/2);
-  background:transparent;
 }
 
 /* 고백 작성 영역 */
@@ -73,7 +70,6 @@ body {
   font-weight:800;
   text-align:center;
   line-height:34px;
-  z-index:2;
 }
 
 .composer-top {
@@ -98,8 +94,7 @@ body {
   margin-right:7px;
 }
 
-#target,
-#postPassword {
+#target,#postPassword {
   width:100%;
   min-width:0;
   height:35px;
@@ -132,15 +127,12 @@ body {
   color:var(--ink);
 }
 
-input:focus,
-textarea:focus {
+input:focus,textarea:focus {
   outline:2px solid #ffd0e6;
   border-color:#f45ca6;
 }
 
-::placeholder {
-  color:#a69aaa;
-}
+::placeholder { color:#a69aaa; }
 
 .submit {
   height:60px;
@@ -172,7 +164,39 @@ button:disabled {
   font-size:12px;
 }
 
-/* 게시글 목록 */
+/* 관리자 로그인 */
+.admin-area {
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:8px;
+  margin:12px 0;
+  min-height:34px;
+}
+
+.admin-status {
+  font-size:12px;
+  color:#9a7b91;
+}
+
+.admin-login-button,
+.admin-logout-button {
+  padding:8px 14px;
+  border:1px solid #f2a5c9;
+  border-radius:8px;
+  background:#fff0f7;
+  color:#d32d7d;
+  font-size:12px;
+  font-weight:800;
+}
+
+.admin-logout-button {
+  border-color:#ddd;
+  background:#fff;
+  color:#777;
+}
+
+/* 게시글 */
 .posts {
   display:grid;
   gap:9px;
@@ -204,9 +228,7 @@ button:disabled {
   font-weight:900;
 }
 
-.post-main {
-  min-width:0;
-}
+.post-main { min-width:0; }
 
 .post-head {
   display:flex;
@@ -236,7 +258,6 @@ button:disabled {
   overflow-wrap:anywhere;
 }
 
-/* 게시글 삭제 버튼 */
 .post-actions {
   display:flex;
   justify-content:flex-end;
@@ -280,9 +301,7 @@ button:disabled {
   border-bottom:1px solid #f8e1ed;
 }
 
-.comment:last-child {
-  border:0;
-}
+.comment:last-child { border:0; }
 
 .comment-top {
   display:flex;
@@ -299,9 +318,7 @@ button:disabled {
   overflow-wrap:anywhere;
 }
 
-.comment-actions {
-  text-align:right;
-}
+.comment-actions { text-align:right; }
 
 .comment-area {
   display:flex;
@@ -370,15 +387,11 @@ button:disabled {
 
 /* 모바일 */
 @media(max-width:1170px) {
-  .hero {
-    margin-left:-20px;
-  }
+  .hero { margin-left:-20px; }
 }
 
 @media(max-width:700px) {
-  .page {
-    width:calc(100% - 24px);
-  }
+  .page { width:calc(100% - 24px); }
 
   .hero {
     height:190px;
@@ -425,9 +438,7 @@ button:disabled {
     min-height:55px;
   }
 
-  .submit {
-    height:48px;
-  }
+  .submit { height:48px; }
 
   .post {
     grid-template-columns:54px minmax(0,1fr);
@@ -442,9 +453,7 @@ button:disabled {
     font-size:22px;
   }
 
-  .comment-area {
-    flex-wrap:wrap;
-  }
+  .comment-area { flex-wrap:wrap; }
 
   .comment-form {
     flex-basis:100%;
@@ -457,18 +466,14 @@ button:disabled {
 }
 
 @media(max-width:420px) {
-  .hero {
-    height:190px;
-  }
+  .hero { height:190px; }
 
   .post-head {
     flex-direction:column;
     gap:3px;
   }
 
-  .post-content {
-    font-size:14px;
-  }
+  .post-content { font-size:14px; }
 
   .comment-form {
     grid-template-columns:minmax(0,1fr) 100px auto;
@@ -481,12 +486,10 @@ button:disabled {
 
 <main class="page">
 
-  <!-- 상단 배경 -->
   <header class="hero" aria-label="곰돌이와 하트 배경"></header>
 
   <!-- 고백 작성 -->
   <section class="composer">
-
     <form id="confessionForm">
 
       <div class="composer-top">
@@ -542,8 +545,35 @@ button:disabled {
       <div class="status" id="formStatus" aria-live="polite"></div>
 
     </form>
-
   </section>
+
+  <!-- 관리자 로그인 -->
+  <div class="admin-area">
+
+    <span class="admin-status" id="adminStatus">
+      일반 모드
+    </span>
+
+    <button
+      class="admin-login-button"
+      id="adminLoginButton"
+      type="button"
+      onclick="adminLogin()"
+    >
+      관리자 로그인
+    </button>
+
+    <button
+      class="admin-logout-button"
+      id="adminLogoutButton"
+      type="button"
+      onclick="adminLogout()"
+      hidden
+    >
+      로그아웃
+    </button>
+
+  </div>
 
   <!-- 게시글 목록 -->
   <section id="postList" class="posts" aria-live="polite">
@@ -574,6 +604,10 @@ const db = window.supabase.createClient(
 
 const postList = document.getElementById("postList");
 const formStatus = document.getElementById("formStatus");
+
+/* 관리자 로그인 상태
+   새로고침하면 자동으로 일반 모드 */
+let isAdminMode = false;
 
 
 /* =================================
@@ -606,6 +640,83 @@ function formatDate(value) {
 
 
 /* =================================
+   관리자 로그인
+================================= */
+
+async function adminLogin() {
+
+  const password = prompt(
+    "관리자 마스터 비밀번호를 입력하세요."
+  );
+
+  if (password === null) return;
+
+  if (!password) {
+    alert("비밀번호를 입력해 주세요.");
+    return;
+  }
+
+  try {
+
+    const { data,error } = await db.rpc(
+      "admin_check_password",
+      {
+        p_password:password
+      }
+    );
+
+    if (error) throw error;
+
+    if (data !== true) {
+      alert("관리자 비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    isAdminMode = true;
+
+    document.getElementById("adminStatus").textContent =
+      "관리자 모드";
+
+    document.getElementById("adminLoginButton").hidden = true;
+    document.getElementById("adminLogoutButton").hidden = false;
+
+    alert("관리자 모드로 로그인했습니다.");
+
+    await loadPosts();
+
+  } catch(error) {
+
+    console.error("관리자 로그인 오류:",error);
+
+    alert(
+      "관리자 로그인에 실패했습니다.\n" +
+      (error.message || "Supabase 설정을 확인해 주세요.")
+    );
+
+  }
+}
+
+
+/* =================================
+   관리자 로그아웃
+================================= */
+
+function adminLogout() {
+
+  isAdminMode = false;
+
+  document.getElementById("adminStatus").textContent =
+    "일반 모드";
+
+  document.getElementById("adminLoginButton").hidden = false;
+  document.getElementById("adminLogoutButton").hidden = true;
+
+  loadPosts();
+
+}
+
+
+/* =================================
    게시글 등록
 ================================= */
 
@@ -619,8 +730,10 @@ document.getElementById("confessionForm")
   const password = document.getElementById("postPassword").value;
 
   if (!target || !content || password.length < 4) {
+
     formStatus.textContent =
       "닉네임, 고백 내용과 비밀번호(4자 이상)를 입력해 주세요.";
+
     return;
   }
 
@@ -632,9 +745,11 @@ document.getElementById("confessionForm")
   try {
 
     const { error } = await db.rpc("create_confession", {
+
       p_target_nickname:target,
       p_content:content,
       p_password:password
+
     });
 
     if (error) throw error;
@@ -667,7 +782,7 @@ document.getElementById("confessionForm")
 
 async function loadPosts() {
 
-  const { data:posts, error } = await db
+  const { data:posts,error } = await db
     .from("confessions")
     .select("id,target_nickname,content,created_at")
     .order("created_at",{ascending:false})
@@ -693,7 +808,7 @@ async function loadPosts() {
 
   const ids = posts.map(post => post.id);
 
-  const { data:comments, error:commentError } = await db
+  const { data:comments,error:commentError } = await db
     .from("confession_comments")
     .select("id,confession_id,content,created_at")
     .in("confession_id",ids)
@@ -743,13 +858,15 @@ async function loadPosts() {
               본인 삭제
             </button>
 
-            <button
-              class="admin-delete-button"
-              type="button"
-              onclick="adminDeletePost('${post.id}')"
-            >
-              관리자 삭제
-            </button>
+            ${isAdminMode ? `
+              <button
+                class="admin-delete-button"
+                type="button"
+                onclick="adminDeletePost('${post.id}')"
+              >
+                관리자 삭제
+              </button>
+            ` : ""}
 
           </div>
 
@@ -760,11 +877,8 @@ async function loadPosts() {
               <div class="comment">
 
                 <div class="comment-top">
-
                   <span>익명</span>
-
                   <span>${formatDate(comment.created_at)}</span>
-
                 </div>
 
                 <div class="comment-content">
@@ -834,9 +948,7 @@ async function loadPosts() {
 
 
   document.querySelectorAll(".comment-form").forEach(form => {
-
     form.addEventListener("submit",addComment);
-
   });
 
 }
@@ -884,7 +996,10 @@ async function addComment(event) {
 
     console.error("댓글 등록 오류:",error);
 
-    alert("댓글 등록 실패: " + (error.message || "다시 시도해 주세요."));
+    alert(
+      "댓글 등록 실패: " +
+      (error.message || "다시 시도해 주세요.")
+    );
 
     button.disabled = false;
 
@@ -906,9 +1021,7 @@ async function deletePost(postId) {
   if (password === null) return;
 
   if (!password) {
-
     alert("비밀번호를 입력해 주세요.");
-
     return;
   }
 
@@ -940,7 +1053,10 @@ async function deletePost(postId) {
 
     console.error("게시글 삭제 오류:",error);
 
-    alert("게시글 삭제 실패: " + (error.message || "다시 시도해 주세요."));
+    alert(
+      "게시글 삭제 실패: " +
+      (error.message || "다시 시도해 주세요.")
+    );
 
   }
 
@@ -960,9 +1076,7 @@ async function deleteComment(commentId) {
   if (password === null) return;
 
   if (!password) {
-
     alert("비밀번호를 입력해 주세요.");
-
     return;
   }
 
@@ -994,7 +1108,10 @@ async function deleteComment(commentId) {
 
     console.error("댓글 삭제 오류:",error);
 
-    alert("댓글 삭제 실패: " + (error.message || "다시 시도해 주세요."));
+    alert(
+      "댓글 삭제 실패: " +
+      (error.message || "다시 시도해 주세요.")
+    );
 
   }
 
@@ -1003,10 +1120,16 @@ async function deleteComment(commentId) {
 
 /* =================================
    관리자 게시글별 삭제
-   admin_delete_one 함수 사용
 ================================= */
 
 async function adminDeletePost(postId) {
+
+  if (!isAdminMode) {
+
+    alert("관리자 로그인 후 이용해 주세요.");
+
+    return;
+  }
 
   const confirmed = confirm(
     "선택한 게시글과 그 게시글의 댓글만 삭제합니다.\n\n계속하시겠습니까?"
@@ -1015,7 +1138,7 @@ async function adminDeletePost(postId) {
   if (!confirmed) return;
 
   const password = prompt(
-    "관리자 마스터 비밀번호를 입력해 주세요."
+    "관리자 마스터 비밀번호를 다시 입력해 주세요."
   );
 
   if (password === null) return;
