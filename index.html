@@ -1093,6 +1093,36 @@ function saveOwnerId(key, id) {
   ids.add(String(id));
   try { localStorage.setItem(key, JSON.stringify([...ids])); } catch (_) {}
 }
+
+// RPC에서 ID를 받지 못하는 경우에도 같은 브라우저에서 작성자를 확인할 수 있도록
+// 게시글/댓글의 고유한 내용 조합을 별도로 저장합니다.
+const OWNER_POST_SIGNATURES_KEY = "confession_owner_post_signatures_v2";
+const OWNER_COMMENT_SIGNATURES_KEY = "confession_owner_comment_signatures_v2";
+
+function makeSignature(parts) {
+  return JSON.stringify(parts.map(value => String(value ?? "")));
+}
+function readOwnerSignatures(key) {
+  try { return new Set(JSON.parse(localStorage.getItem(key) || "[]")); }
+  catch (_) { return new Set(); }
+}
+function saveOwnerSignature(key, parts) {
+  const signatures = readOwnerSignatures(key);
+  signatures.add(makeSignature(parts));
+  try { localStorage.setItem(key, JSON.stringify([...signatures])); } catch (_) {}
+}
+function ownsPost(post) {
+  return readOwnerIds(OWNER_POSTS_KEY).has(String(post.id)) ||
+    readOwnerSignatures(OWNER_POST_SIGNATURES_KEY).has(
+      makeSignature([post.target_nickname, post.content])
+    );
+}
+function ownsComment(comment) {
+  return readOwnerIds(OWNER_COMMENTS_KEY).has(String(comment.id)) ||
+    readOwnerSignatures(OWNER_COMMENT_SIGNATURES_KEY).has(
+      makeSignature([comment.confession_id, comment.content])
+    );
+}
 function returnedId(data) {
   // Supabase RPC는 UUID, 객체, 배열 등 여러 형태로 값을 반환할 수 있음
   if (typeof data === "string" || typeof data === "number") return data;
@@ -1221,6 +1251,7 @@ document.getElementById("confessionForm").addEventListener("submit", async funct
       newPostId = foundPost?.id ?? null;
     }
     if (newPostId !== null) saveOwnerId(OWNER_POSTS_KEY, newPostId);
+    saveOwnerSignature(OWNER_POST_SIGNATURES_KEY, [target, content]);
 
     this.reset();
     formStatus.textContent = "고백이 등록되었습니다. 💗";
@@ -1274,13 +1305,12 @@ async function loadPosts() {
         <div class="post-main">
           <div class="post-head">
             <span class="target-name">${escapeHTML(post.target_nickname)}</span>
-            <span class="date">◷ ${escapeHTML(formatDate(post.created_at))}</span>
           </div>
 
           <p class="post-content">${escapeHTML(post.content)}</p>
 
           <div class="post-actions">
-            ${readOwnerIds(OWNER_POSTS_KEY).has(String(post.id)) ? `<button class="delete-button" type="button" onclick="deletePost('${escapeHTML(post.id)}')">본인삭제</button>` : ""}
+            ${ownsPost(post) ? `<button class="delete-button" type="button" onclick="deletePost('${escapeHTML(post.id)}')">본인삭제</button>` : ""}
             ${isAdminMode ? `<button class="admin-delete-button" type="button" onclick="adminDeletePost('${escapeHTML(post.id)}')">관리자 삭제</button>` : ""}
           </div>
 <div class="comment-panel ${isOpen ? "open" : ""}" id="comment-panel-${escapeHTML(post.id)}">
@@ -1289,7 +1319,7 @@ async function loadPosts() {
                 <div class="comment">
                   <div class="comment-top">
                     <span>${escapeHTML(commentNickname(comment.id))}</span>
-                    ${readOwnerIds(OWNER_COMMENTS_KEY).has(String(comment.id)) ? `<button class="delete-button" type="button" onclick="deleteComment('${escapeHTML(comment.id)}')">본인삭제</button>` : ""}
+                    ${ownsComment(comment) ? `<button class="delete-button" type="button" onclick="deleteComment('${escapeHTML(comment.id)}')">본인삭제</button>` : ""}
                   </div>
                   <div class="comment-content">${escapeHTML(comment.content)}</div>
                 </div>
@@ -1380,6 +1410,7 @@ async function addComment(event) {
       newCommentId = foundComment?.id ?? null;
     }
     if (newCommentId !== null) saveOwnerId(OWNER_COMMENTS_KEY, newCommentId);
+    saveOwnerSignature(OWNER_COMMENT_SIGNATURES_KEY, [postId, content]);
 
     openedCommentPosts.add(String(postId));
     await loadPosts();
