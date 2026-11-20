@@ -662,7 +662,7 @@ button:disabled {
   background:transparent !important;
   box-shadow:none !important;
   color:#956f83 !important;
-  font-size:10px
+  font-size:10px;
   font-weight:500;
   cursor:pointer;
 }
@@ -770,10 +770,9 @@ button:disabled {
   min-width:76px;
   height:34px;
 }
-.comment-actions .delete-button { display:none; }
-.comment-actions .delete-button.is-owner { display:inline-block; }
-.post-actions .delete-button { display:none; }
-.post-actions .delete-button.is-owner { display:inline-block; }
+/* 삭제 버튼은 표시하고, 실제 삭제 여부는 비밀번호로 확인 */
+.comment-actions .delete-button,
+.post-actions .delete-button { display:inline-block; }
 @media(max-width:700px) {
   .post-actions { top:8px; right:10px; }
   .post-head { padding-right:82px; }
@@ -807,7 +806,7 @@ button:disabled {
 /* 안내 문구 위치 - PC에서만 조정 */
 @media (min-width:701px) {
   .confession-intro {
-    top:50px; /* PC: 숫자를 바꾸어 위아래 위치 조정 */
+    top:90px; /* PC: 숫자를 바꾸어 위아래 위치 조정 */
   }
 }
 
@@ -821,7 +820,7 @@ button:disabled {
 /* 안내 문구 위치 - 모바일에서만 조정 */
 @media(max-width:700px) {
   .confession-intro {
-    top:-90px; /* 모바일: 숫자를 바꾸어 위아래 위치 조정 */
+    top:-70px; /* 모바일: 숫자를 바꾸어 위아래 위치 조정 */
     margin-bottom:-55px;
     padding:8px 14px;
     font-size:19px;
@@ -886,6 +885,13 @@ if (!window.supabase) {
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const postList = document.getElementById("postList");
+/* 댓글 펼치기 버튼 이벤트를 위임 방식으로 처리 */
+postList.addEventListener("click", function(event) {
+  const toggleButton = event.target.closest("[data-toggle-comments]");
+  if (!toggleButton) return;
+  event.preventDefault();
+  toggleComments(toggleButton.dataset.toggleComments);
+});
 const formStatus = document.getElementById("formStatus");
 let isAdminMode = false;
 let openedCommentPosts = new Set();
@@ -1059,7 +1065,7 @@ async function loadPosts() {
             <button class="comment-toggle" type="button"
               aria-expanded="${isOpen ? "true" : "false"}"
               aria-controls="comment-panel-${escapeHTML(post.id)}"
-              onclick="toggleComments('${escapeHTML(post.id)}')">
+              data-toggle-comments="${escapeHTML(post.id)}">
               댓글 ${list.length}개 <span class="arrow" aria-hidden="true"></span>
             </button>
           </div>
