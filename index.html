@@ -378,9 +378,12 @@ button:disabled {
 
 .footer {
   text-align:center;
-  padding:17px 0 5px;
+  padding:37px 0 5px;
   color:#c33b80;
   font:700 20px "Gaegu",cursive;
+}
+.footer-last-line {
+  display:inline;
 }
 
 /* 모바일 */
@@ -390,6 +393,7 @@ button:disabled {
 
 @media(max-width:700px) {
   .page { width:calc(100% - 24px); }
+  .footer-last-line { display:block; }
 
   .hero {
     height:175px;
@@ -678,7 +682,107 @@ button:disabled {
 
 @media (max-width:700px) {
   .composer {
-    margin-top:5px !important; /* 모바일: 숫자를 바꿔 이동 거리 조절 */
+    margin-top:70px !important; /* 모바일: 숫자를 바꿔 이동 거리 조절 */
+  }
+}
+
+
+
+/* 게시글 본인삭제: 카드 오른쪽 위, 버튼 테두리와 배경 제거 */
+.post { position:relative; }
+.post-actions {
+  position:absolute;
+  top:10px;
+  right:18px;
+  z-index:2;
+  margin:0;
+  gap:9px;
+}
+.post-actions .delete-button,
+.post-actions .admin-delete-button {
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  padding:3px 2px;
+  color:#a56b89;
+  font-size:11px;
+}
+.post-actions .delete-button:hover,
+.post-actions .admin-delete-button:hover {
+  background:transparent !important;
+  text-decoration:underline;
+}
+.post-head { padding-right:105px; }
+
+/* 댓글 작성란: 비밀번호 칸을 댓글 입력칸 왼쪽에 작게 배치 */
+.comment-form {
+  display:grid !important;
+  grid-template-columns:105px minmax(0,1fr) auto;
+  align-items:center;
+  gap:7px;
+  width:100%;
+  margin-top:9px;
+}
+.comment-form .comment-password-wrap {
+  display:block;
+  width:100%;
+}
+.comment-form .password-caption { display:none !important; }
+.comment-form input[name="password"] {
+  width:100%;
+  height:34px;
+  padding:5px 7px;
+  font-size:11px;
+}
+.comment-form input[name="comment"] {
+  width:100%;
+  min-width:0;
+  height:34px;
+  background:#fff;
+  font-size:13px;
+}
+.comment-form button { align-self:center; min-width:76px; height:34px; }
+.comment-actions .delete-button { display:none; }
+.comment-actions .delete-button.is-owner { display:inline-block; }
+.post-actions .delete-button { display:none; }
+.post-actions .delete-button.is-owner { display:inline-block; }
+@media(max-width:700px) {
+  .post-actions { top:8px; right:10px; }
+  .post-head { padding-right:82px; }
+  .comment-form { grid-template-columns:82px minmax(0,1fr); }
+  .comment-form button { grid-column:2; justify-self:end; }
+}
+
+/* 고백하기 위 안내 문구 */
+.confession-intro {
+  width:fit-content;
+  max-width:100%;
+  margin:0 auto -150px;
+  padding:10px 22px;
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:999px;
+  background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,239,247,.88));
+  box-shadow:0 5px 18px rgba(190,75,130,.13);
+  color:#a52c70;
+  font-family:"Gaegu","Pretendard",sans-serif;
+  font-size:24px;
+  font-weight:700;
+  letter-spacing:.3px;
+  text-align:center;
+  position:relative;
+  z-index:1;
+}
+.confession-intro span {
+  display:inline-block;
+  margin-left:5px;
+  color:#f45ca6;
+  font-size:20px;
+}
+@media(max-width:700px) {
+  .confession-intro {
+    margin-bottom:-55px;
+    padding:8px 14px;
+    font-size:19px;
   }
 }
 
@@ -687,6 +791,8 @@ button:disabled {
 <body>
 <main class="page">
   <header class="hero" aria-label="곰돌이와 하트 배경"></header>
+
+  <div class="confession-intro">익명으로 솔직한 마음을 전해요 <span aria-hidden="true">♥</span></div>
 
   <section class="composer">
     <form id="confessionForm">
@@ -713,7 +819,7 @@ button:disabled {
     <div class="empty">고백을 불러오고 있습니다...</div>
   </section>
 
-  <footer class="footer">💗 좋은 마음이 모여 더 따뜻한 모임이 되길 바라요 💗</footer>
+  <footer class="footer">💗 좋은 마음이 모여 더 따뜻한 모임이 <span class="footer-last-line">되길 바라요 💗</span></footer>
   <div class="admin-area">
     <span class="admin-status" id="adminStatus" aria-hidden="true"></span>
     <button class="admin-login-button" id="adminLoginButton" type="button">관리자 모드</button>
@@ -741,6 +847,26 @@ const postList = document.getElementById("postList");
 const formStatus = document.getElementById("formStatus");
 let isAdminMode = false;
 let openedCommentPosts = new Set();
+
+// 이 브라우저에서 직접 작성한 게시글/댓글만 본인 삭제 버튼 표시
+const OWNER_POSTS_KEY = "confession_owner_posts_v1";
+const OWNER_COMMENTS_KEY = "confession_owner_comments_v1";
+function readOwnerIds(key) {
+  try { return new Set(JSON.parse(localStorage.getItem(key) || "[]").map(String)); }
+  catch (_) { return new Set(); }
+}
+function saveOwnerId(key, id) {
+  if (id === null || id === undefined || id === "") return;
+  const ids = readOwnerIds(key);
+  ids.add(String(id));
+  try { localStorage.setItem(key, JSON.stringify([...ids])); } catch (_) {}
+}
+function returnedId(data) {
+  if (typeof data === "string" || typeof data === "number") return data;
+  if (Array.isArray(data) && data.length) return data[0]?.id ?? data[0];
+  if (data && typeof data === "object") return data.id ?? data.confession_id ?? data.comment_id ?? null;
+  return null;
+}
 
 /* HTML 문자 안전 처리 */
 function escapeHTML(value) {
@@ -810,10 +936,20 @@ document.getElementById("confessionForm").addEventListener("submit", async funct
   formStatus.textContent = "고백을 등록하고 있습니다...";
 
   try {
-    const { error } = await db.rpc("create_confession", {
+    const { data:createdPost, error } = await db.rpc("create_confession", {
       p_target_nickname:target, p_content:content, p_password:password
     });
     if (error) throw error;
+
+    // 함수가 ID를 반환하지 않는 경우 방금 등록한 글을 조회해 소유 표시를 저장
+    let newPostId = returnedId(createdPost);
+    if (newPostId === null) {
+      const { data:foundPost } = await db.from("confessions").select("id")
+        .eq("target_nickname", target).eq("content", content)
+        .order("created_at", { ascending:false }).limit(1).maybeSingle();
+      newPostId = foundPost?.id ?? null;
+    }
+    if (newPostId !== null) saveOwnerId(OWNER_POSTS_KEY, newPostId);
 
     this.reset();
     formStatus.textContent = "고백이 등록되었습니다. 💗";
@@ -873,7 +1009,7 @@ async function loadPosts() {
           <p class="post-content">${escapeHTML(post.content)}</p>
 
           <div class="post-actions">
-            <button class="delete-button" type="button" onclick="deletePost('${escapeHTML(post.id)}')">본인 삭제</button>
+            <button class="delete-button ${readOwnerIds(OWNER_POSTS_KEY).has(String(post.id)) ? "is-owner" : ""}" type="button" onclick="deletePost('${escapeHTML(post.id)}')">본인 삭제</button>
             ${isAdminMode ? `<button class="admin-delete-button" type="button" onclick="adminDeletePost('${escapeHTML(post.id)}')">관리자 삭제</button>` : ""}
           </div>
 
@@ -896,23 +1032,22 @@ async function loadPosts() {
                   </div>
                   <div class="comment-content">${escapeHTML(comment.content)}</div>
                   <div class="comment-actions">
-                    <button class="delete-button" type="button" onclick="deleteComment('${escapeHTML(comment.id)}')">본인 삭제</button>
+                    <button class="delete-button ${readOwnerIds(OWNER_COMMENTS_KEY).has(String(comment.id)) ? "is-owner" : ""}" type="button" onclick="deleteComment('${escapeHTML(comment.id)}')">본인 삭제</button>
                   </div>
                 </div>
               `).join("") : '<div class="comment-empty">아직 댓글이 없습니다. 첫 댓글을 남겨보세요. 💗</div>'}
             </div>
-
-            <form class="comment-form" data-post-id="${escapeHTML(post.id)}">
-              <div class="comment-password-wrap">
-                <div class="password-caption">비밀번호</div>
-                <input name="password" type="password" minlength="4" maxlength="50"
-                  autocomplete="new-password" placeholder="비밀번호" required aria-label="댓글 비밀번호">
-              </div>
-              <input name="comment" maxlength="500" placeholder="댓글을 입력해보세요..." required>
-              <button type="submit">댓글 등록</button>
-            </form>
-            <div class="comment-status" aria-live="polite"></div>
           </div>
+
+          <form class="comment-form" data-post-id="${escapeHTML(post.id)}">
+            <div class="comment-password-wrap">
+              <input name="password" type="password" minlength="4" maxlength="50"
+                autocomplete="new-password" placeholder="비밀번호" required aria-label="댓글 비밀번호">
+            </div>
+            <input name="comment" maxlength="500" placeholder="댓글을 입력해보세요..." required>
+            <button type="submit">댓글 등록</button>
+          </form>
+          <div class="comment-status" aria-live="polite"></div>
         </div>
       </article>
     `;
@@ -954,10 +1089,19 @@ async function addComment(event) {
   status.textContent = "댓글을 등록하고 있습니다...";
 
   try {
-    const { error } = await db.rpc("create_comment", {
+    const { data:createdComment, error } = await db.rpc("create_comment", {
       p_confession_id:postId, p_content:content, p_password:password
     });
     if (error) throw error;
+
+    let newCommentId = returnedId(createdComment);
+    if (newCommentId === null) {
+      const { data:foundComment } = await db.from("confession_comments").select("id")
+        .eq("confession_id", postId).eq("content", content)
+        .order("created_at", { ascending:false }).limit(1).maybeSingle();
+      newCommentId = foundComment?.id ?? null;
+    }
+    if (newCommentId !== null) saveOwnerId(OWNER_COMMENTS_KEY, newCommentId);
 
     openedCommentPosts.add(String(postId));
     await loadPosts();
@@ -982,6 +1126,8 @@ async function deletePost(postId) {
     if (error) throw error;
     if (data !== true) { alert("비밀번호가 일치하지 않거나 삭제할 수 없는 게시글입니다."); return; }
     openedCommentPosts.delete(String(postId));
+    const ownedPosts = readOwnerIds(OWNER_POSTS_KEY); ownedPosts.delete(String(postId));
+    try { localStorage.setItem(OWNER_POSTS_KEY, JSON.stringify([...ownedPosts])); } catch (_) {}
     alert("게시글이 삭제되었습니다.");
     await loadPosts();
   } catch (error) {
@@ -1003,6 +1149,8 @@ async function deleteComment(commentId) {
     });
     if (error) throw error;
     if (data !== true) { alert("비밀번호가 일치하지 않거나 삭제할 수 없는 댓글입니다."); return; }
+    const ownedComments = readOwnerIds(OWNER_COMMENTS_KEY); ownedComments.delete(String(commentId));
+    try { localStorage.setItem(OWNER_COMMENTS_KEY, JSON.stringify([...ownedComments])); } catch (_) {}
     alert("댓글이 삭제되었습니다.");
     await loadPosts();
   } catch (error) {
