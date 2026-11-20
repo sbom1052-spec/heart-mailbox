@@ -1079,6 +1079,23 @@ function formatDate(value) {
   });
 }
 
+/* 댓글 ID를 기준으로 새로고침해도 바뀌지 않는 무작위 5글자 닉네임 */
+function commentNickname(id) {
+  const chars = Array.from("가나다라마바사아자차카타파하거너더러머버서어저처커터퍼허고노도로모보소오조초코토포호구누두루무부수우주추쿠투푸후");
+  const seedText = String(id ?? "comment");
+  let seed = 2166136261;
+  for (let i = 0; i < seedText.length; i++) {
+    seed ^= seedText.charCodeAt(i);
+    seed = Math.imul(seed, 16777619);
+  }
+  let result = "";
+  for (let i = 0; i < 5; i++) {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    result += chars[seed % chars.length];
+  }
+  return result;
+}
+
 function setAdminUI() {
   document.getElementById("adminStatus").textContent = isAdminMode ? "관리자 모드" : "일반 모드";
   document.getElementById("adminLoginButton").hidden = isAdminMode;
@@ -1204,7 +1221,7 @@ async function loadPosts() {
           <p class="post-content">${escapeHTML(post.content)}</p>
 
           <div class="post-actions">
-            <button class="delete-button ${readOwnerIds(OWNER_POSTS_KEY).has(String(post.id)) ? "is-owner" : ""}" type="button" onclick="deletePost('${escapeHTML(post.id)}')">본인 삭제</button>
+            <button class="delete-button ${readOwnerIds(OWNER_POSTS_KEY).has(String(post.id)) ? "is-owner" : ""}" type="button" onclick="deletePost('${escapeHTML(post.id)}')">본인삭제</button>
             ${isAdminMode ? `<button class="admin-delete-button" type="button" onclick="adminDeletePost('${escapeHTML(post.id)}')">관리자 삭제</button>` : ""}
           </div>
 <div class="comment-panel ${isOpen ? "open" : ""}" id="comment-panel-${escapeHTML(post.id)}">
@@ -1212,13 +1229,10 @@ async function loadPosts() {
               ${list.length ? list.map(comment => `
                 <div class="comment">
                   <div class="comment-top">
-                    <span>익명</span>
-                    <span>${escapeHTML(formatDate(comment.created_at))}</span>
+                    <span>${escapeHTML(commentNickname(comment.id))}</span>
+                    <button class="delete-button ${readOwnerIds(OWNER_COMMENTS_KEY).has(String(comment.id)) ? "is-owner" : ""}" type="button" onclick="deleteComment('${escapeHTML(comment.id)}')">본인삭제</button>
                   </div>
                   <div class="comment-content">${escapeHTML(comment.content)}</div>
-                  <div class="comment-actions">
-                    <button class="delete-button ${readOwnerIds(OWNER_COMMENTS_KEY).has(String(comment.id)) ? "is-owner" : ""}" type="button" onclick="deleteComment('${escapeHTML(comment.id)}')">본인 삭제</button>
-                  </div>
                 </div>
               `).join("") : '<div class="comment-empty">아직 댓글이 없습니다. 첫 댓글을 남겨보세요. 💗</div>'}
             </div>
