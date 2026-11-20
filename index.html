@@ -714,18 +714,20 @@ button:disabled {
 }
 .post-head { padding-right:105px; }
 
-/* 댓글 작성란: 비밀번호 칸을 댓글 입력칸 왼쪽에 작게 배치 */
+/* 댓글 작성란: 댓글 입력칸은 왼쪽, 비밀번호는 오른쪽에 배치하고 게시글 카드 폭에 맞춤 */
 .comment-form {
   display:grid !important;
-  grid-template-columns:105px minmax(0,1fr) auto;
+  grid-template-columns:minmax(0,1fr) 105px auto;
   align-items:center;
   gap:7px;
-  width:100%;
-  margin-top:9px;
+  width:calc(100% + 94px);
+  margin:9px 0 0 -94px;
 }
 .comment-form .comment-password-wrap {
   display:block;
   width:100%;
+  grid-column:2;
+  grid-row:1;
 }
 .comment-form .password-caption { display:none !important; }
 .comment-form input[name="password"] {
@@ -735,13 +737,21 @@ button:disabled {
   font-size:11px;
 }
 .comment-form input[name="comment"] {
+  grid-column:1;
+  grid-row:1;
   width:100%;
   min-width:0;
   height:34px;
   background:#fff;
   font-size:13px;
 }
-.comment-form button { align-self:center; min-width:76px; height:34px; }
+.comment-form button {
+  grid-column:3;
+  grid-row:1;
+  align-self:center;
+  min-width:76px;
+  height:34px;
+}
 .comment-actions .delete-button { display:none; }
 .comment-actions .delete-button.is-owner { display:inline-block; }
 .post-actions .delete-button { display:none; }
@@ -749,8 +759,11 @@ button:disabled {
 @media(max-width:700px) {
   .post-actions { top:8px; right:10px; }
   .post-head { padding-right:82px; }
-  .comment-form { grid-template-columns:82px minmax(0,1fr); }
-  .comment-form button { grid-column:2; justify-self:end; }
+  .comment-form {
+    grid-template-columns:minmax(0,1fr) 82px auto;
+    width:calc(100% + 64px);
+    margin-left:-64px;
+  }
 }
 
 /* 고백하기 위 안내 문구 */
