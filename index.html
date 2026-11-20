@@ -203,8 +203,8 @@ button:disabled {
 .post {
   min-height:139px;
   display:grid;
-  grid-template-columns:78px minmax(0,1fr);
-  gap:16px;
+  grid-template-columns:48px minmax(0,1fr);
+  gap:10px;
   padding:14px 24px 11px;
   background:rgba(255,255,255,.98);
   border:1px solid #ffc0df;
@@ -213,8 +213,8 @@ button:disabled {
 }
 
 .heart-count {
-  width:72px;
-  height:72px;
+  width:42px;
+  height:42px;
   margin-top:1px;
   border-radius:50%;
   background:#ffe0ef;
@@ -443,16 +443,16 @@ button:disabled {
   .submit { height:48px; }
 
   .post {
-    grid-template-columns:54px minmax(0,1fr);
-    gap:10px;
+    grid-template-columns:40px minmax(0,1fr);
+    gap:8px;
     padding:13px 12px;
     min-height:0;
   }
 
   .heart-count {
-    width:52px;
-    height:52px;
-    font-size:22px;
+    width:36px;
+    height:36px;
+    font-size:19px;
   }
 
   .comment-area { flex-wrap:wrap; }
@@ -827,6 +827,74 @@ button:disabled {
   }
 }
 
+
+/* 댓글 입력칸이 왼쪽 하트 원형 영역을 침범하지 않도록 post-main 안에 배치 */
+.comment-form {
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 105px 48px !important;
+  align-items:center;
+  gap:7px;
+  width:calc(100% + 58px);
+  margin:9px 0 0 -58px;
+}
+.comment-form input[name="comment"] {
+  grid-column:1;
+  grid-row:1;
+  width:100%;
+  min-width:0;
+  height:36px;
+}
+.comment-form .comment-password-wrap {
+  grid-column:2;
+  grid-row:1;
+  width:100%;
+}
+.comment-form input[name="password"] {
+  width:100%;
+  height:36px;
+}
+.comment-form button {
+  grid-column:3;
+  grid-row:1;
+  width:48px;
+  min-width:48px;
+  height:36px;
+  padding:0 5px;
+  white-space:nowrap;
+  font-size:12px;
+}
+.comment-toggle-row {
+  display:flex;
+  justify-content:flex-start;
+  align-items:center;
+  width:calc(100% + 58px);
+  margin:6px 0 3px -58px;
+}
+.comment-toggle {
+  padding:5px 9px;
+  cursor:pointer;
+}
+.comment-panel { display:none; }
+.comment-panel.open { display:block; }
+
+@media(max-width:700px) {
+  .comment-form {
+    grid-template-columns:minmax(0,1fr) 82px 44px !important;
+    width:calc(100% + 48px);
+    margin-left:-48px;
+    gap:5px;
+  }
+  .comment-form button {
+    width:44px;
+    min-width:44px;
+    padding:0 4px;
+  }
+  .comment-toggle-row {
+    width:calc(100% + 48px);
+    margin-left:-48px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -885,12 +953,14 @@ if (!window.supabase) {
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const postList = document.getElementById("postList");
-/* 댓글 펼치기 버튼 이벤트를 위임 방식으로 처리 */
+/* 댓글 개수 버튼 클릭: 동적으로 다시 그려져도 작동하도록 위임 처리 */
 postList.addEventListener("click", function(event) {
-  const toggleButton = event.target.closest("[data-toggle-comments]");
-  if (!toggleButton) return;
+  const toggleButton = event.target.closest("button[data-toggle-comments]");
+  if (!toggleButton || !postList.contains(toggleButton)) return;
   event.preventDefault();
-  toggleComments(toggleButton.dataset.toggleComments);
+  event.stopPropagation();
+  const postId = toggleButton.getAttribute("data-toggle-comments");
+  toggleComments(postId);
 });
 const formStatus = document.getElementById("formStatus");
 let isAdminMode = false;
@@ -1060,17 +1130,7 @@ async function loadPosts() {
             <button class="delete-button ${readOwnerIds(OWNER_POSTS_KEY).has(String(post.id)) ? "is-owner" : ""}" type="button" onclick="deletePost('${escapeHTML(post.id)}')">본인 삭제</button>
             ${isAdminMode ? `<button class="admin-delete-button" type="button" onclick="adminDeletePost('${escapeHTML(post.id)}')">관리자 삭제</button>` : ""}
           </div>
-
-          <div class="comment-toggle-row">
-            <button class="comment-toggle" type="button"
-              aria-expanded="${isOpen ? "true" : "false"}"
-              aria-controls="comment-panel-${escapeHTML(post.id)}"
-              data-toggle-comments="${escapeHTML(post.id)}">
-              댓글 ${list.length}개 <span class="arrow" aria-hidden="true"></span>
-            </button>
-          </div>
-
-          <div class="comment-panel ${isOpen ? "open" : ""}" id="comment-panel-${escapeHTML(post.id)}">
+<div class="comment-panel ${isOpen ? "open" : ""}" id="comment-panel-${escapeHTML(post.id)}">
             <div class="comments">
               ${list.length ? list.map(comment => `
                 <div class="comment">
@@ -1093,8 +1153,16 @@ async function loadPosts() {
                 autocomplete="new-password" placeholder="비밀번호" required aria-label="댓글 비밀번호">
             </div>
             <input name="comment" maxlength="500" placeholder="댓글을 입력해보세요..." required>
-            <button type="submit">댓글 등록</button>
+            <button type="submit">등록</button>
           </form>
+          <div class="comment-toggle-row">
+            <button class="comment-toggle" type="button"
+              aria-expanded="${isOpen ? "true" : "false"}"
+              aria-controls="comment-panel-${escapeHTML(post.id)}"
+              data-toggle-comments="${escapeHTML(post.id)}">
+              댓글 ${list.length}개 <span class="arrow" aria-hidden="true"></span>
+            </button>
+          </div>
           <div class="comment-status" aria-live="polite"></div>
         </div>
       </article>
@@ -1109,13 +1177,23 @@ async function loadPosts() {
 /* 댓글 열기 / 닫기 */
 function toggleComments(postId) {
   const id = String(postId);
-  if (openedCommentPosts.has(id)) openedCommentPosts.delete(id);
-  else openedCommentPosts.add(id);
+  const isNowOpen = !openedCommentPosts.has(id);
+  if (isNowOpen) openedCommentPosts.add(id);
+  else openedCommentPosts.delete(id);
 
-  const panel = document.getElementById("comment-panel-" + CSS.escape(id));
-  const button = panel?.parentElement.querySelector(".comment-toggle");
-  if (panel) panel.classList.toggle("open", openedCommentPosts.has(id));
-  if (button) button.setAttribute("aria-expanded", openedCommentPosts.has(id) ? "true" : "false");
+  // 버튼의 data 값으로 해당 댓글 영역을 찾아 표시 상태를 변경
+  const button = [...postList.querySelectorAll("button[data-toggle-comments]")]
+    .find(item => item.getAttribute("data-toggle-comments") === id);
+  const panelId = button?.getAttribute("aria-controls");
+  const panel = panelId ? document.getElementById(panelId) : null;
+
+  if (panel) {
+    panel.classList.toggle("open", isNowOpen);
+    panel.style.display = isNowOpen ? "block" : "none";
+  }
+  if (button) {
+    button.setAttribute("aria-expanded", isNowOpen ? "true" : "false");
+  }
 }
 
 /* 댓글 등록 후 해당 게시글 댓글 영역 자동 열기 */
