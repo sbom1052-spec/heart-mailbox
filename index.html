@@ -1009,6 +1009,20 @@ button:disabled {
   display:inline-block;
 }
 
+
+
+/* 본인삭제: 기존 글자 크기와 모양은 유지하고 색상만 변경 */
+.post-actions .delete-button,
+.comment-top .delete-button,
+.comment-actions .delete-button {
+  color:#e0448b !important;
+}
+.post-actions .delete-button:hover,
+.comment-top .delete-button:hover,
+.comment-actions .delete-button:hover {
+  color:#b92b70 !important;
+}
+
 </style>
 </head>
 <body>
@@ -1092,36 +1106,6 @@ function saveOwnerId(key, id) {
   const ids = readOwnerIds(key);
   ids.add(String(id));
   try { localStorage.setItem(key, JSON.stringify([...ids])); } catch (_) {}
-}
-
-// RPC에서 ID를 받지 못하는 경우에도 같은 브라우저에서 작성자를 확인할 수 있도록
-// 게시글/댓글의 고유한 내용 조합을 별도로 저장합니다.
-const OWNER_POST_SIGNATURES_KEY = "confession_owner_post_signatures_v2";
-const OWNER_COMMENT_SIGNATURES_KEY = "confession_owner_comment_signatures_v2";
-
-function makeSignature(parts) {
-  return JSON.stringify(parts.map(value => String(value ?? "")));
-}
-function readOwnerSignatures(key) {
-  try { return new Set(JSON.parse(localStorage.getItem(key) || "[]")); }
-  catch (_) { return new Set(); }
-}
-function saveOwnerSignature(key, parts) {
-  const signatures = readOwnerSignatures(key);
-  signatures.add(makeSignature(parts));
-  try { localStorage.setItem(key, JSON.stringify([...signatures])); } catch (_) {}
-}
-function ownsPost(post) {
-  return readOwnerIds(OWNER_POSTS_KEY).has(String(post.id)) ||
-    readOwnerSignatures(OWNER_POST_SIGNATURES_KEY).has(
-      makeSignature([post.target_nickname, post.content])
-    );
-}
-function ownsComment(comment) {
-  return readOwnerIds(OWNER_COMMENTS_KEY).has(String(comment.id)) ||
-    readOwnerSignatures(OWNER_COMMENT_SIGNATURES_KEY).has(
-      makeSignature([comment.confession_id, comment.content])
-    );
 }
 function returnedId(data) {
   // Supabase RPC는 UUID, 객체, 배열 등 여러 형태로 값을 반환할 수 있음
@@ -1251,7 +1235,6 @@ document.getElementById("confessionForm").addEventListener("submit", async funct
       newPostId = foundPost?.id ?? null;
     }
     if (newPostId !== null) saveOwnerId(OWNER_POSTS_KEY, newPostId);
-    saveOwnerSignature(OWNER_POST_SIGNATURES_KEY, [target, content]);
 
     this.reset();
     formStatus.textContent = "고백이 등록되었습니다. 💗";
@@ -1305,12 +1288,13 @@ async function loadPosts() {
         <div class="post-main">
           <div class="post-head">
             <span class="target-name">${escapeHTML(post.target_nickname)}</span>
+            <span class="date">◷ ${escapeHTML(formatDate(post.created_at))}</span>
           </div>
 
           <p class="post-content">${escapeHTML(post.content)}</p>
 
           <div class="post-actions">
-            ${ownsPost(post) ? `<button class="delete-button" type="button" onclick="deletePost('${escapeHTML(post.id)}')">본인삭제</button>` : ""}
+            ${readOwnerIds(OWNER_POSTS_KEY).has(String(post.id)) ? `<button class="delete-button" type="button" onclick="deletePost('${escapeHTML(post.id)}')">게시물삭제</button>` : ""}
             ${isAdminMode ? `<button class="admin-delete-button" type="button" onclick="adminDeletePost('${escapeHTML(post.id)}')">관리자 삭제</button>` : ""}
           </div>
 <div class="comment-panel ${isOpen ? "open" : ""}" id="comment-panel-${escapeHTML(post.id)}">
@@ -1319,7 +1303,8 @@ async function loadPosts() {
                 <div class="comment">
                   <div class="comment-top">
                     <span>${escapeHTML(commentNickname(comment.id))}</span>
-                    ${ownsComment(comment) ? `<button class="delete-button" type="button" onclick="deleteComment('${escapeHTML(comment.id)}')">본인삭제</button>` : ""}
+                    ${readOwnerIds(OWNER_COMMENTS_KEY).has(String(comment.id)) ? `<button class="delete-button" type="button" onclick="deleteComment('${escapeHTML(comment.id)}')">댓글삭제</button>` : ""} 
+                    ${isAdminMode ? `<button class="admin-delete-button" type="button" onclick="adminDeleteComment('${escapeHTML(comment.id)}')">관리자 댓글삭제</button>` : ""}
                   </div>
                   <div class="comment-content">${escapeHTML(comment.content)}</div>
                 </div>
@@ -1410,7 +1395,6 @@ async function addComment(event) {
       newCommentId = foundComment?.id ?? null;
     }
     if (newCommentId !== null) saveOwnerId(OWNER_COMMENTS_KEY, newCommentId);
-    saveOwnerSignature(OWNER_COMMENT_SIGNATURES_KEY, [postId, content]);
 
     openedCommentPosts.add(String(postId));
     await loadPosts();
@@ -1465,6 +1449,33 @@ async function deleteComment(commentId) {
   } catch (error) {
     console.error("댓글 삭제 오류:", error);
     alert("댓글 삭제 실패: " + (error.message || "다시 시도해 주세요."));
+  }
+}
+
+/* 관리자 모드에서 댓글 하나만 별도로 삭제 */
+async function adminDeleteComment(commentId) {
+  if (!isAdminMode) { alert("관리자 로그인 후 이용해 주세요."); return; }
+  if (!confirm("선택한 댓글만 삭제할까요? 게시글은 삭제되지 않습니다.")) return;
+
+  const password = prompt("관리자 마스터 비밀번호를 다시 입력해 주세요.");
+  if (password === null) return;
+  if (!password) { alert("관리자 비밀번호를 입력해 주세요."); return; }
+
+  try {
+    const { data, error } = await db.rpc("admin_delete_comment", {
+      p_comment_id: commentId,
+      p_password: password
+    });
+    if (error) throw error;
+    if (data !== true) {
+      alert("관리자 비밀번호가 틀렸거나 댓글을 찾을 수 없습니다.");
+      return;
+    }
+    alert("댓글이 삭제되었습니다.");
+    await loadPosts();
+  } catch (error) {
+    console.error("관리자 댓글 삭제 오류:", error);
+    alert("관리자 댓글 삭제 실패\\n" + (error.message || "Supabase의 admin_delete_comment 함수 설정을 확인해 주세요."));
   }
 }
 
