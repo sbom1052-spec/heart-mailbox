@@ -688,7 +688,7 @@ button:disabled {
 
 
 
-/* 게시글 본인삭제: 카드 오른쪽 위, 버튼 테두리와 배경 제거 */
+/* 게시물삭제·댓글삭제·관리자삭제 버튼: 네모 없이 같은 글자 스타일 */
 .post { position:relative; }
 .post-actions {
   position:absolute;
@@ -699,54 +699,31 @@ button:disabled {
   gap:9px;
 }
 .post-actions .delete-button,
-.post-actions .admin-delete-button {
-  border:0 !important;
-  background:transparent !important;
-  box-shadow:none !important;
-  padding:3px 2px;
-  color:#a56b89;
-  font-size:11px;
-}
-.post-actions .delete-button:hover,
-.post-actions .admin-delete-button:hover {
-  background:transparent !important;
-  text-decoration:underline;
-}
-.post-head { padding-right:105px; }
-
-
-/* 관리자 댓글삭제: 관리자 삭제와 동일한 색상·글자 크기, 네모 테두리 제거 */
+.post-actions .admin-delete-button,
+.comment-top .delete-button,
 .comment-top .admin-delete-button {
   border:0 !important;
+  outline:0 !important;
   background:transparent !important;
   box-shadow:none !important;
+  border-radius:0 !important;
   padding:2px 0 !important;
+  min-width:0 !important;
+  height:auto !important;
   color:#a56b89 !important;
   font-size:11px !important;
   font-weight:400 !important;
-  border-radius:0 !important;
+  text-decoration:none !important;
 }
+.post-actions .delete-button:hover,
+.post-actions .admin-delete-button:hover,
+.comment-top .delete-button:hover,
 .comment-top .admin-delete-button:hover {
+  color:#bd286f !important;
   background:transparent !important;
-  text-decoration:underline;
+  text-decoration:underline !important;
 }
-
-/* 댓글 본인 삭제: 네모 테두리와 배경 제거 */
-.comment-actions .delete-button,
-.comment-actions .delete-button.is-owner {
-  border:0 !important;
-  background:transparent !important;
-  box-shadow:none !important;
-  padding:2px 0 !important;
-  color:#a56b89 !important;
-  font-size:11px;
-  border-radius:0 !important;
-}
-.comment-actions .delete-button:hover,
-.comment-actions .delete-button.is-owner:hover {
-  background:transparent !important;
-  text-decoration:underline;
-}
+.post-head { padding-right:105px; }
 
 /* 댓글 작성란: 댓글 입력칸은 왼쪽, 비밀번호는 오른쪽에 배치하고 게시글 카드 폭에 맞춤 */
 .comment-form {
@@ -989,27 +966,16 @@ button:disabled {
 }
 
 
-/* 댓글 본인삭제: 네모 테두리와 버튼 배경 제거 */
+/* 댓글 본인삭제와 관리자삭제의 글자 스타일 통일 */
 .comment-top .delete-button,
-.comment-actions .delete-button {
-  border: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  border-radius: 0 !important;
-  padding: 0 2px !important;
-  min-width: 0 !important;
-  height: auto !important;
-  color: #9b879f !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  text-decoration: none !important;
-}
-.comment-top .delete-button:hover,
-.comment-actions .delete-button:hover {
-  color: #765c80 !important;
-  background: transparent !important;
-  text-decoration: underline !important;
+.comment-top .admin-delete-button {
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  padding:2px 0 !important;
+  color:#a56b89 !important;
+  font-size:11px !important;
+  font-weight:400 !important;
 }
 
 /* 전체 색감: 기존 분위기를 유지하면서 부드러운 라벤더·로즈 톤으로 미세 조정 */
@@ -1027,16 +993,13 @@ button:disabled {
 
 
 
-/* 본인삭제: 기존 글자 크기와 모양은 유지하고 색상만 변경 */
+/* 작성자 본인삭제 버튼은 관리자삭제 버튼과 동일한 글자 스타일 */
 .post-actions .delete-button,
-.comment-top .delete-button,
-.comment-actions .delete-button {
-  color:#e0448b !important;
-}
-.post-actions .delete-button:hover,
-.comment-top .delete-button:hover,
-.comment-actions .delete-button:hover {
-  color:#b92b70 !important;
+.comment-top .delete-button {
+  display:inline-block;
+  color:#a56b89 !important;
+  font-size:11px !important;
+  font-weight:400 !important;
 }
 
 </style>
