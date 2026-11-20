@@ -1094,9 +1094,29 @@ function saveOwnerId(key, id) {
   try { localStorage.setItem(key, JSON.stringify([...ids])); } catch (_) {}
 }
 function returnedId(data) {
+  // Supabase RPC는 UUID, 객체, 배열 등 여러 형태로 값을 반환할 수 있음
   if (typeof data === "string" || typeof data === "number") return data;
-  if (Array.isArray(data) && data.length) return data[0]?.id ?? data[0];
-  if (data && typeof data === "object") return data.id ?? data.confession_id ?? data.comment_id ?? null;
+  if (Array.isArray(data)) {
+    for (const item of data) {
+      const found = returnedId(item);
+      if (found !== null && found !== undefined && found !== "") return found;
+    }
+    return null;
+  }
+  if (data && typeof data === "object") {
+    const directKeys = ["id", "confession_id", "comment_id", "create_confession", "create_comment"];
+    for (const key of directKeys) {
+      if (data[key] !== undefined && data[key] !== null) {
+        const found = returnedId(data[key]);
+        if (found !== null && found !== undefined && found !== "") return found;
+      }
+    }
+    // RPC 함수명이나 반환 컬럼명이 다른 경우에도 첫 번째 값에서 ID 추출
+    for (const value of Object.values(data)) {
+      const found = returnedId(value);
+      if (found !== null && found !== undefined && found !== "") return found;
+    }
+  }
   return null;
 }
 
@@ -1191,11 +1211,13 @@ document.getElementById("confessionForm").addEventListener("submit", async funct
     if (error) throw error;
 
     // 함수가 ID를 반환하지 않는 경우 방금 등록한 글을 조회해 소유 표시를 저장
+    console.log("게시글 등록 반환값:", createdPost);
     let newPostId = returnedId(createdPost);
     if (newPostId === null) {
-      const { data:foundPost } = await db.from("confessions").select("id")
+      const { data:foundPost, error:findPostError } = await db.from("confessions").select("id")
         .eq("target_nickname", target).eq("content", content)
         .order("created_at", { ascending:false }).limit(1).maybeSingle();
+      if (findPostError) console.error("게시글 ID 확인 오류:", findPostError);
       newPostId = foundPost?.id ?? null;
     }
     if (newPostId !== null) saveOwnerId(OWNER_POSTS_KEY, newPostId);
@@ -1348,11 +1370,13 @@ async function addComment(event) {
     });
     if (error) throw error;
 
+    console.log("댓글 등록 반환값:", createdComment);
     let newCommentId = returnedId(createdComment);
     if (newCommentId === null) {
-      const { data:foundComment } = await db.from("confession_comments").select("id")
+      const { data:foundComment, error:findCommentError } = await db.from("confession_comments").select("id")
         .eq("confession_id", postId).eq("content", content)
         .order("created_at", { ascending:false }).limit(1).maybeSingle();
+      if (findCommentError) console.error("댓글 ID 확인 오류:", findCommentError);
       newCommentId = foundComment?.id ?? null;
     }
     if (newCommentId !== null) saveOwnerId(OWNER_COMMENTS_KEY, newCommentId);
