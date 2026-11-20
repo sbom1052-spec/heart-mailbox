@@ -676,7 +676,7 @@ button:disabled {
 /* 화면별 게시판 전체 위치 조정 */
 @media (min-width:701px) {
   .composer {
-    margin-top:100px !important; /* PC: 숫자를 바꿔 이동 거리 조절 */
+    margin-top:200px !important; /* PC: 숫자를 바꿔 이동 거리 조절 */
   }
 }
 
@@ -713,6 +713,24 @@ button:disabled {
   text-decoration:underline;
 }
 .post-head { padding-right:105px; }
+
+
+/* 댓글 본인 삭제: 네모 테두리와 배경 제거 */
+.comment-actions .delete-button,
+.comment-actions .delete-button.is-owner {
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  padding:2px 0 !important;
+  color:#a56b89 !important;
+  font-size:11px;
+  border-radius:0 !important;
+}
+.comment-actions .delete-button:hover,
+.comment-actions .delete-button.is-owner:hover {
+  background:transparent !important;
+  text-decoration:underline;
+}
 
 /* 댓글 작성란: 댓글 입력칸은 왼쪽, 비밀번호는 오른쪽에 배치하고 게시글 카드 폭에 맞춤 */
 .comment-form {
@@ -783,17 +801,27 @@ button:disabled {
   letter-spacing:.3px;
   text-align:center;
   position:relative;
-  top:-80px; /* 안내 문구를 위로 30px 이동 */
   z-index:1;
 }
+
+/* 안내 문구 위치 - PC에서만 조정 */
+@media (min-width:701px) {
+  .confession-intro {
+    top:-40px; /* PC: 숫자를 바꾸어 위아래 위치 조정 */
+  }
+}
+
 .confession-intro span {
   display:inline-block;
   margin-left:5px;
   color:#f45ca6;
   font-size:20px;
 }
+
+/* 안내 문구 위치 - 모바일에서만 조정 */
 @media(max-width:700px) {
   .confession-intro {
+    top:-90px; /* 모바일: 숫자를 바꾸어 위아래 위치 조정 */
     margin-bottom:-55px;
     padding:8px 14px;
     font-size:19px;
@@ -1032,7 +1060,7 @@ async function loadPosts() {
               aria-expanded="${isOpen ? "true" : "false"}"
               aria-controls="comment-panel-${escapeHTML(post.id)}"
               onclick="toggleComments('${escapeHTML(post.id)}')">
-              💬 댓글 ${list.length}개 <span class="arrow" aria-hidden="true"></span>
+              댓글 ${list.length}개 <span class="arrow" aria-hidden="true"></span>
             </button>
           </div>
 
