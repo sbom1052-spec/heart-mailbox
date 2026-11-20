@@ -895,6 +895,83 @@ button:disabled {
   }
 }
 
+
+/* 최종본 보정: 하트 원형 축소 + 댓글 입력란을 게시글 카드 안쪽 왼쪽선에 정렬 */
+.post {
+  grid-template-columns:40px minmax(0,1fr) !important;
+  column-gap:8px !important;
+}
+.post .heart-count {
+  width:34px !important;
+  height:34px !important;
+  font-size:21px !important;
+  margin-top:2px !important;
+}
+.post-main { min-width:0 !important; }
+
+/* post-main 시작점에서 왼쪽 카드 안쪽 여백(24px)까지 확장 */
+.post .comment-form {
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 105px 48px !important;
+  gap:7px !important;
+  width:calc(100% + 48px) !important;
+  margin:9px 0 0 -48px !important;
+  min-width:0 !important;
+}
+.post .comment-form input[name="comment"] {
+  grid-column:1 !important;
+  grid-row:1 !important;
+  width:100% !important;
+  min-width:0 !important;
+}
+.post .comment-form .comment-password-wrap {
+  grid-column:2 !important;
+  grid-row:1 !important;
+  width:100% !important;
+}
+.post .comment-form input[name="password"] {
+  width:100% !important;
+  min-width:0 !important;
+}
+.post .comment-form button {
+  grid-column:3 !important;
+  grid-row:1 !important;
+  width:48px !important;
+  min-width:48px !important;
+  padding:0 4px !important;
+}
+.post .comment-toggle-row {
+  width:calc(100% + 48px) !important;
+  margin:6px 0 3px -48px !important;
+  justify-content:flex-start !important;
+}
+
+@media(max-width:700px) {
+  .post {
+    grid-template-columns:34px minmax(0,1fr) !important;
+    column-gap:7px !important;
+  }
+  .post .heart-count {
+    width:30px !important;
+    height:30px !important;
+    font-size:18px !important;
+  }
+  .post .comment-form {
+    grid-template-columns:minmax(0,1fr) 82px 44px !important;
+    width:calc(100% + 41px) !important;
+    margin-left:-41px !important;
+    gap:5px !important;
+  }
+  .post .comment-form button {
+    width:44px !important;
+    min-width:44px !important;
+  }
+  .post .comment-toggle-row {
+    width:calc(100% + 41px) !important;
+    margin-left:-41px !important;
+  }
+}
+
 </style>
 </head>
 <body>
