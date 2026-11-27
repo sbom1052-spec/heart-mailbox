@@ -1376,6 +1376,120 @@ input:focus,textarea:focus{outline:2px solid rgba(207,130,139,.22)!important;bor
   }
 }
 
+
+
+/* ===== 2026-11-27 앱 화면 추가 간격 및 댓글 입력창 조정 ===== */
+/* 게시글 내용은 하트와 너무 붙지 않도록 아래로 여백을 줌 */
+.post-content {
+  margin-top: 11px !important;
+}
+
+/* 마음 전하기 탭 크기 축소 */
+.composer::before {
+  min-width: 158px !important;
+  height: 38px !important;
+  line-height: 38px !important;
+  padding: 0 15px !important;
+  font-size: 15px !important;
+  top: -18px !important;
+}
+
+/* 닉네임 입력칸은 세로 높이만 줄임 */
+#target {
+  height: 42px !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+
+/* 비밀번호 입력칸은 작게, 글자는 가운데 정렬 */
+#postPassword,
+.comment-form input[name="password"] {
+  height: 34px !important;
+  padding: 5px 6px !important;
+  text-align: center !important;
+  font-size: 12px !important;
+}
+#postPassword::placeholder,
+.comment-form input[name="password"]::placeholder {
+  text-align: center !important;
+}
+
+/* 댓글 입력 줄을 하트 및 게시글 내용의 왼쪽 기준선에 맞춤 */
+.post .comment-form {
+  width: calc(100% + 58px) !important;
+  margin: 9px 0 0 -58px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 68px 48px !important;
+  gap: 6px !important;
+  align-items: center !important;
+}
+.post .comment-form .comment-password-wrap {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  min-width: 0 !important;
+}
+.post .comment-form input[name="comment"] {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 5px 9px !important;
+  font-size: 12px !important;
+}
+.post .comment-form input[name="password"] {
+  width: 100% !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 4px 3px !important;
+  font-size: 11px !important;
+}
+.post .comment-form button {
+  grid-column: 3 !important;
+  grid-row: 1 !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 7px !important;
+  font-size: 11px !important;
+  border-radius: 13px !important;
+}
+@media (max-width:700px) {
+  .composer::before {
+    min-width: 150px !important;
+    height: 37px !important;
+    line-height: 37px !important;
+    font-size: 14px !important;
+  }
+  #target {
+    height: 40px !important;
+  }
+  #postPassword {
+    height: 32px !important;
+    font-size: 11px !important;
+  }
+  .post-content {
+    margin-top: 11px !important;
+  }
+  .post .comment-form {
+    width: calc(100% + 58px) !important;
+    margin-left: -58px !important;
+    grid-template-columns: minmax(0, 1fr) 66px 48px !important;
+    gap: 5px !important;
+  }
+  .post .comment-form input[name="comment"],
+  .post .comment-form input[name="password"],
+  .post .comment-form button {
+    height: 34px !important;
+    min-height: 34px !important;
+  }
+}
+@media (max-width:360px) {
+  .post .comment-form {
+    grid-template-columns: minmax(0, 1fr) 58px 44px !important;
+  }
+}
+
 </style>
 </head>
 <body>
