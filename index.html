@@ -3,1188 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>우리의 고백 게시판</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<title>4050 김포/인천 싱글모임 비밀 고백게시판</title>
 <style>
-
-:root {
-  --pink:#f45ca6;
-  --deep:#a52c70;
-  --ink:#302044;
-  --line:#ffc1df;
-}
-
-* { box-sizing:border-box; }
-
-html,body {
-  margin:0;
-  min-height:100%;
-}
-
-body {
-  font-family:"Pretendard",sans-serif;
-  color:var(--ink);
-  background:#ffd9e9 url("love_banner.png") center top/100% auto no-repeat;
-}
-
-.page {
-  width:min(1170px,calc(100% - 40px));
-  margin:0 auto;
-  padding:0 0 24px;
-}
-
-/* 상단 배경 */
-.hero {
-  height:280px;
-  width:100vw;
-  margin-left:calc((1170px - 100vw)/2);
-}
-
-/* 고백 작성 영역 */
-.composer {
-  position:relative;
-  min-height:136px;
-  margin:0 0 11px;
-  padding:20px 30px 13px;
-  background:rgba(255,255,255,.97);
-  border:1.5px solid #ff9dce;
-  border-radius:17px;
-  box-shadow:0 3px 12px rgba(221,89,153,.12);
-}
-
-.composer::before {
-  content:"♥  고백하기";
-  position:absolute;
-  left:26px;
-  top:-17px;
-  width:108px;
-  height:34px;
-  background:linear-gradient(135deg,#ff79b7,#f34c9e);
-  border-radius:7px;
-  color:#fff;
-  font-size:14px;
-  font-weight:800;
-  text-align:center;
-  line-height:34px;
-}
-
-.composer-top {
-  display:grid;
-  grid-template-columns:105px minmax(0,275px) minmax(0,175px);
-  gap:12px;
-  align-items:center;
-  margin-bottom:9px;
-}
-
-.field-label {
-  font-size:14px;
-  font-weight:800;
-  color:#8e245e;
-  white-space:nowrap;
-}
-
-.field-label:before {
-  content:"♥";
-  color:#f04e9b;
-  font-size:17px;
-  margin-right:7px;
-}
-
-#target,#postPassword {
-  width:100%;
-  min-width:0;
-  height:35px;
-  padding:7px 11px;
-  border:1px solid #cfc6d2;
-  border-radius:6px;
-  background:#fff;
-  font:13px "Pretendard",sans-serif;
-  color:var(--ink);
-}
-
-.composer-bottom {
-  display:grid;
-  grid-template-columns:105px minmax(0,1fr) 130px;
-  gap:12px;
-  align-items:center;
-}
-
-#content {
-  width:100%;
-  height:43px;
-  min-height:43px;
-  resize:vertical;
-  padding:10px 14px;
-  border:1.5px solid #ffadd3;
-  border-radius:8px;
-  background:#fff;
-  font:14px "Pretendard",sans-serif;
-  line-height:1.5;
-  color:var(--ink);
-}
-
-input:focus,textarea:focus {
-  outline:2px solid #ffd0e6;
-  border-color:#f45ca6;
-}
-
-::placeholder { color:#a69aaa; }
-
-.submit {
-  height:60px;
-  border:0;
-  border-radius:13px;
-  background:linear-gradient(135deg,#ff80bb,#f24d9d);
-  box-shadow:0 3px 0 #e9a0c5;
-  color:white;
-  font-size:16px;
-  font-weight:800;
-  cursor:pointer;
-}
-
-button {
-  font-family:inherit;
-  cursor:pointer;
-}
-
-button:disabled {
-  opacity:.55;
-  cursor:wait;
-}
-
-.status {
-  min-height:16px;
-  margin-top:5px;
-  text-align:center;
-  color:#b52e70;
-  font-size:12px;
-}
-
-/* 관리자 로그인 */
-.admin-area {
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  gap:8px;
-  margin:12px 0;
-  min-height:34px;
-}
-
-.admin-status {
-  font-size:12px;
-  color:#9a7b91;
-}
-
-.admin-login-button,
-.admin-logout-button {
-  padding:8px 14px;
-  border:1px solid #f2a5c9;
-  border-radius:8px;
-  background:#fff0f7;
-  color:#d32d7d;
-  font-size:12px;
-  font-weight:800;
-}
-
-.admin-logout-button {
-  border-color:#ddd;
-  background:#fff;
-  color:#777;
-}
-
-/* 게시글 */
-.posts {
-  display:grid;
-  gap:9px;
-}
-
-.post {
-  min-height:139px;
-  display:grid;
-  grid-template-columns:48px minmax(0,1fr);
-  gap:10px;
-  padding:14px 24px 11px;
-  background:rgba(255,255,255,.98);
-  border:1px solid #ffc0df;
-  border-radius:16px;
-  box-shadow:0 3px 12px rgba(215,105,157,.12);
-}
-
-.heart-count {
-  width:42px;
-  height:42px;
-  margin-top:1px;
-  border-radius:50%;
-  background:#ffe0ef;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#ed3994;
-  font-size:27px;
-  font-weight:900;
-}
-
-.post-main { min-width:0; }
-
-.post-head {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin:1px 0 4px;
-}
-
-.target-name {
-  font-size:17px;
-  font-weight:800;
-  color:#38203e;
-}
-
-.date {
-  font-size:12px;
-  color:#8f829c;
-  white-space:nowrap;
-}
-
-.post-content {
-  white-space:pre-wrap;
-  font-size:15px;
-  line-height:1.55;
-  margin:0 0 7px;
-  overflow-wrap:anywhere;
-}
-
-.post-actions {
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  gap:8px;
-  margin:4px 0;
-}
-
-.delete-button {
-  border:1px solid #f4c5dc;
-  background:#fff7fb;
-  color:#a56b89;
-  border-radius:6px;
-  font-size:11px;
-  padding:5px 9px;
-}
-
-.admin-delete-button {
-  border:1px solid #f2a5c9;
-  background:#fff0f7;
-  color:#d32d7d;
-  border-radius:6px;
-  font-size:11px;
-  font-weight:800;
-  padding:5px 10px;
-}
-
-.delete-button:hover,
-.admin-delete-button:hover {
-  background:#ffe0ef;
-}
-
-/* 댓글 */
-.comments {
-  margin:5px 0 6px;
-  padding:0;
-}
-
-.comment {
-  padding:7px 0;
-  border-bottom:1px solid #f8e1ed;
-}
-
-.comment:last-child { border:0; }
-
-.comment-top {
-  display:flex;
-  justify-content:space-between;
-  color:#9c3972;
-  font-size:11px;
-  margin-bottom:3px;
-}
-
-.comment-content {
-  font-size:12px;
-  line-height:1.5;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-}
-
-.comment-actions { text-align:right; }
-
-.comment-area {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:0;
-  margin-top:5px;
-}
-
-.comment-count {
-  font-size:12px;
-  color:#8d8299;
-  white-space:nowrap;
-}
-
-.comment-count:before {
-  content:"▣";
-  margin-right:5px;
-}
-
-.comment-form {
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 155px auto;
-  gap:6px;
-  flex:1;
-  min-width:0;
-}
-
-.comment-form input {
-  min-width:0;
-  width:100%;
-  height:33px;
-  padding:7px 12px;
-  border:1px solid #f5c4dc;
-  border-radius:7px;
-  background:#fff3f9;
-  font:12px "Pretendard",sans-serif;
-}
-
-.comment-form button {
-  height:33px;
-  padding:0 17px;
-  border:0;
-  border-radius:10px;
-  background:#f66bab;
-  color:white;
-  font-size:12px;
-  font-weight:800;
-}
-
-.empty {
-  text-align:center;
-  padding:35px;
-  background:#fff;
-  border:1px solid #ffc0df;
-  border-radius:16px;
-  color:#9b7c91;
-}
-
-.footer {
-  text-align:center;
-  padding:37px 0 5px;
-  color:#c33b80;
-  font:700 20px "Gaegu",cursive;
-}
-.footer-last-line {
-  display:inline;
-}
-
-/* 모바일 */
-@media(max-width:1170px) {
-  .hero { margin-left:-20px; }
-}
-
-@media(max-width:700px) {
-  .page { width:calc(100% - 24px); }
-  .footer-last-line { display:block; }
-
-  .hero {
-    height:175px;
-    margin-left:-12px;
-    width:100vw;
-  }
-
-  .composer {
-    padding:20px 14px 15px;
-    min-height:0;
-  }
-
-  .composer::before {
-    left:12px;
-    top:-16px;
-    width:104px;
-    height:32px;
-    font-size:13px;
-    line-height:32px;
-  }
-
-  .composer-top {
-    grid-template-columns:105px minmax(0,1fr);
-    gap:7px;
-    margin-bottom:9px;
-  }
-
-  #postPassword {
-    grid-column:2;
-    width:100%;
-  }
-
-  .composer-bottom {
-    grid-template-columns:105px minmax(0,1fr);
-    gap:7px;
-  }
-
-  .composer-bottom .submit {
-    grid-column:1 / -1;
-  }
-
-  #content {
-    height:55px;
-    min-height:55px;
-  }
-
-  .submit { height:48px; }
-
-  .post {
-    grid-template-columns:40px minmax(0,1fr);
-    gap:8px;
-    padding:13px 12px;
-    min-height:0;
-  }
-
-  .heart-count {
-    width:36px;
-    height:36px;
-    font-size:19px;
-  }
-
-  .comment-area { flex-wrap:wrap; }
-
-  .comment-form {
-    flex-basis:100%;
-    grid-template-columns:minmax(0,1fr) 115px auto;
-  }
-
-  .post-head {
-    align-items:flex-start;
-  }
-}
-
-@media(max-width:420px) {
-  .hero { height:175px; }
-
-  .post-head {
-    flex-direction:column;
-    gap:3px;
-  }
-
-  .post-content { font-size:14px; }
-
-  .comment-form {
-    grid-template-columns:minmax(0,1fr) 100px auto;
-  }
-}
-
-
-/* 댓글 접기/펼치기 */
-.comment-toggle-row {
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  margin:7px 0 4px;
-}
-.comment-toggle {
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:6px 10px;
-  border:1px solid #f5bfd9;
-  border-radius:8px;
-  background:#fff5fa;
-  color:#b52e70;
-  font-size:12px;
-  font-weight:800;
-}
-.comment-toggle .arrow {
-  display:inline-block;
-  width:0;height:0;
-  border-left:4px solid transparent;
-  border-right:4px solid transparent;
-  border-top:5px solid currentColor;
-  transition:transform .18s ease;
-}
-.comment-toggle[aria-expanded="true"] .arrow { transform:rotate(180deg); }
-.comment-panel { display:none; margin-top:4px; }
-.comment-panel.open { display:block; }
-.comment-empty {
-  padding:9px 0;
-  color:#a58b9b;
-  font-size:12px;
-}
-.comment-status {
-  min-height:15px;
-  margin-top:3px;
-  color:#b52e70;
-  font-size:11px;
-}
-@media(max-width:700px) {
-  .comment-form { grid-template-columns:minmax(0,1fr) 105px auto; }
-}
-
-
-/* 고백 입력 배치: 비밀번호는 고백 내용 옆, 내용 입력창은 제목 아래 */
-.composer { padding:22px 30px 14px; }
-.composer-top {
-  display:grid;
-  grid-template-columns:105px minmax(0,330px);
-  gap:10px;
-  margin-bottom:12px;
-}
-.composer-bottom {
-  display:grid;
-  grid-template-columns:105px minmax(0,1fr) 125px;
-  grid-template-rows:auto auto;
-  column-gap:10px;
-  row-gap:7px;
-  align-items:start;
-}
-.confession-label-wrap {
-  grid-column:1 / 3;
-  grid-row:1;
-  display:grid;
-  grid-template-columns:105px minmax(0,1fr);
-  gap:10px;
-  align-items:center;
-}
-.confession-label-wrap .field-label { white-space:nowrap; }
-.confession-label-wrap #postPassword {
-  width:145px;
-  height:28px;
-  padding:5px 8px;
-  font-size:12px;
-  justify-self:start;
-}
-#content {
-  grid-column:1 / 3;
-  grid-row:2;
-  width:100%;
-  height:68px;
-  min-height:68px;
-  margin:0;
-}
-.composer-bottom .submit {
-  grid-column:3;
-  grid-row:1 / 3;
-  height:103px;
-}
-/* 관리자 메뉴는 게시판 맨 아래에만 표시 */
-.admin-area {
-  justify-content:center;
-  margin:18px 0 4px;
-  min-height:30px;
-}
-.admin-status { display:none; }
-/* 댓글 입력: 비밀번호는 위쪽 왼편, 댓글 입력은 아래쪽으로 길게 */
-.comment-form {
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  width:100%;
-  margin-top:10px;
-}
-.comment-form .comment-password-wrap {
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  width:125px;
-}
-.comment-form input[name="password"] {
-  width:125px;
-  height:27px;
-  padding:5px 8px;
-  font-size:11px;
-}
-.comment-form input[name="comment"] {
-  width:100%;
-  height:38px;
-  background:#fff;
-  font-size:13px;
-}
-.comment-form button {
-  align-self:flex-end;
-  min-width:76px;
-}
-@media(max-width:700px) {
-  .composer { padding:20px 14px 14px; }
-  .composer-top { grid-template-columns:95px minmax(0,1fr); }
-  .composer-bottom {
-    grid-template-columns:95px minmax(0,1fr);
-    grid-template-rows:auto auto auto;
-    gap:7px;
-  }
-  .confession-label-wrap {
-    grid-column:1 / 3;
-    grid-row:1;
-    grid-template-columns:95px minmax(0,1fr);
-    gap:7px;
-  }
-  .confession-label-wrap #postPassword { width:125px; }
-  #content {
-    grid-column:1 / 3;
-    grid-row:2;
-    height:72px;
-    min-height:72px;
-  }
-  .composer-bottom .submit {
-    grid-column:1 / 3;
-    grid-row:3;
-    height:45px;
-  }
-}
-
-/* 관리자 모드: 테두리/배경 네모칸 제거, 최대한 은은하게 표시 */
-.admin-area {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:10px;
-  margin:18px 0 4px;
-  min-height:22px;
-  opacity:.28;
-  transition:opacity .2s ease;
-}
-.admin-area:hover,
-.admin-area:focus-within { opacity:.75; }
-.admin-login-button,
-.admin-logout-button {
-  appearance:none;
-  padding:2px 4px;
-  border:0 !important;
-  outline:0;
-  border-radius:0 !important;
-  background:transparent !important;
-  box-shadow:none !important;
-  color:#956f83 !important;
-  font-size:10px;
-  font-weight:500;
-  cursor:pointer;
-}
-.admin-login-button:hover,
-.admin-logout-button:hover {
-  color:#75465f !important;
-  text-decoration:underline;
-}
-
-
-/* 화면별 게시판 전체 위치 조정 */
-@media (min-width:701px) {
-  .composer {
-    margin-top:280px !important; /* PC: 숫자를 바꿔 이동 거리 조절 */
-  }
-}
-
-@media (max-width:700px) {
-  .composer {
-    margin-top:5px !important; /* 모바일: 숫자를 바꿔 이동 거리 조절 */
-  }
-}
-
-
-
-/* 게시물삭제·댓글삭제·관리자삭제 버튼: 네모 없이 같은 글자 스타일 */
-.post { position:relative; }
-.post-actions {
-  position:absolute;
-  top:10px;
-  right:18px;
-  z-index:2;
-  margin:0;
-  gap:9px;
-}
-.post-actions .delete-button,
-.post-actions .admin-delete-button,
-.comment-top .delete-button,
-.comment-top .admin-delete-button {
-  border:0 !important;
-  outline:0 !important;
-  background:transparent !important;
-  box-shadow:none !important;
-  border-radius:0 !important;
-  padding:2px 0 !important;
-  min-width:0 !important;
-  height:auto !important;
-  color:#a56b89 !important;
-  font-size:11px !important;
-  font-weight:400 !important;
-  text-decoration:none !important;
-}
-.post-actions .delete-button:hover,
-.post-actions .admin-delete-button:hover,
-.comment-top .delete-button:hover,
-.comment-top .admin-delete-button:hover {
-  color:#bd286f !important;
-  background:transparent !important;
-  text-decoration:underline !important;
-}
-.post-head { padding-right:105px; }
-
-/* 댓글 작성란: 댓글 입력칸은 왼쪽, 비밀번호는 오른쪽에 배치하고 게시글 카드 폭에 맞춤 */
-.comment-form {
-  display:grid !important;
-  grid-template-columns:minmax(0,1fr) 105px auto;
-  align-items:center;
-  gap:7px;
-  width:calc(100% + 94px);
-  margin:9px 0 0 -94px;
-}
-.comment-form .comment-password-wrap {
-  display:block;
-  width:100%;
-  grid-column:2;
-  grid-row:1;
-}
-.comment-form .password-caption { display:none !important; }
-.comment-form input[name="password"] {
-  width:100%;
-  height:34px;
-  padding:5px 7px;
-  font-size:11px;
-}
-.comment-form input[name="comment"] {
-  grid-column:1;
-  grid-row:1;
-  width:100%;
-  min-width:0;
-  height:34px;
-  background:#fff;
-  font-size:13px;
-}
-.comment-form button {
-  grid-column:3;
-  grid-row:1;
-  align-self:center;
-  min-width:76px;
-  height:34px;
-}
-/* 삭제 버튼은 표시하고, 실제 삭제 여부는 비밀번호로 확인 */
-.comment-actions .delete-button,
-.post-actions .delete-button { display:inline-block; }
-@media(max-width:700px) {
-  .post-actions { top:8px; right:10px; }
-  .post-head { padding-right:82px; }
-  .comment-form {
-    grid-template-columns:minmax(0,1fr) 82px auto;
-    width:calc(100% + 64px);
-    margin-left:-64px;
-  }
-}
-
-/* 고백하기 위 안내 문구 */
-.confession-intro {
-  width:fit-content;
-  max-width:100%;
-  margin:0 auto -150px;
-  padding:10px 22px;
-  border:1px solid rgba(255,255,255,.9);
-  border-radius:999px;
-  background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(255,239,247,.88));
-  box-shadow:0 5px 18px rgba(190,75,130,.13);
-  color:#a52c70;
-  font-family:"Gaegu","Pretendard",sans-serif;
-  font-size:24px;
-  font-weight:700;
-  letter-spacing:.3px;
-  text-align:center;
-  position:relative;
-  z-index:1;
-}
-
-/* 안내 문구 위치 - PC에서만 조정 */
-@media (min-width:701px) {
-  .confession-intro {
-    top:110px; /* PC: 숫자를 바꾸어 위아래 위치 조정 */
-  }
-}
-
-.confession-intro span {
-  display:inline-block;
-  margin-left:5px;
-  color:#f45ca6;
-  font-size:20px;
-}
-
-/* 안내 문구 위치 - 모바일에서만 조정 */
-@media(max-width:700px) {
-  .confession-intro {
-    top:-90px; /* 모바일: 숫자를 바꾸어 위아래 위치 조정 */
-    margin-bottom:-55px;
-    padding:8px 14px;
-    font-size:19px;
-  }
-}
-
-
-/* 댓글 입력칸이 왼쪽 하트 원형 영역을 침범하지 않도록 post-main 안에 배치 */
-.comment-form {
-  display:grid !important;
-  grid-template-columns:minmax(0,1fr) 105px 48px !important;
-  align-items:center;
-  gap:7px;
-  width:calc(100% + 58px);
-  margin:9px 0 0 -58px;
-}
-.comment-form input[name="comment"] {
-  grid-column:1;
-  grid-row:1;
-  width:100%;
-  min-width:0;
-  height:36px;
-}
-.comment-form .comment-password-wrap {
-  grid-column:2;
-  grid-row:1;
-  width:100%;
-}
-.comment-form input[name="password"] {
-  width:100%;
-  height:36px;
-}
-.comment-form button {
-  grid-column:3;
-  grid-row:1;
-  width:48px;
-  min-width:48px;
-  height:36px;
-  padding:0 5px;
-  white-space:nowrap;
-  font-size:12px;
-}
-.comment-toggle-row {
-  display:flex;
-  justify-content:flex-start;
-  align-items:center;
-  width:calc(100% + 58px);
-  margin:6px 0 3px -58px;
-}
-.comment-toggle {
-  padding:5px 9px;
-  cursor:pointer;
-}
-.comment-panel { display:none; }
-.comment-panel.open { display:block; }
-
-@media(max-width:700px) {
-  .comment-form {
-    grid-template-columns:minmax(0,1fr) 82px 44px !important;
-    width:calc(100% + 48px);
-    margin-left:-48px;
-    gap:5px;
-  }
-  .comment-form button {
-    width:44px;
-    min-width:44px;
-    padding:0 4px;
-  }
-  .comment-toggle-row {
-    width:calc(100% + 48px);
-    margin-left:-48px;
-  }
-}
-
-
-/* 최종본 보정: 하트 원형 축소 + 댓글 입력란을 게시글 카드 안쪽 왼쪽선에 정렬 */
-.post {
-  grid-template-columns:40px minmax(0,1fr) !important;
-  column-gap:8px !important;
-}
-.post .heart-count {
-  width:34px !important;
-  height:34px !important;
-  font-size:21px !important;
-  margin-top:2px !important;
-}
-.post-main { min-width:0 !important; }
-
-/* post-main 시작점에서 왼쪽 카드 안쪽 여백(24px)까지 확장 */
-.post .comment-form {
-  display:grid !important;
-  grid-template-columns:minmax(0,1fr) 105px 48px !important;
-  gap:7px !important;
-  width:calc(100% + 48px) !important;
-  margin:9px 0 0 -48px !important;
-  min-width:0 !important;
-}
-.post .comment-form input[name="comment"] {
-  grid-column:1 !important;
-  grid-row:1 !important;
-  width:100% !important;
-  min-width:0 !important;
-}
-.post .comment-form .comment-password-wrap {
-  grid-column:2 !important;
-  grid-row:1 !important;
-  width:100% !important;
-}
-.post .comment-form input[name="password"] {
-  width:100% !important;
-  min-width:0 !important;
-}
-.post .comment-form button {
-  grid-column:3 !important;
-  grid-row:1 !important;
-  width:48px !important;
-  min-width:48px !important;
-  padding:0 4px !important;
-}
-.post .comment-toggle-row {
-  width:calc(100% + 48px) !important;
-  margin:6px 0 3px -48px !important;
-  justify-content:flex-start !important;
-}
-
-@media(max-width:700px) {
-  .post {
-    grid-template-columns:34px minmax(0,1fr) !important;
-    column-gap:7px !important;
-  }
-  .post .heart-count {
-    width:30px !important;
-    height:30px !important;
-    font-size:18px !important;
-  }
-  .post .comment-form {
-    grid-template-columns:minmax(0,1fr) 82px 44px !important;
-    width:calc(100% + 41px) !important;
-    margin-left:-41px !important;
-    gap:5px !important;
-  }
-  .post .comment-form button {
-    width:44px !important;
-    min-width:44px !important;
-  }
-  .post .comment-toggle-row {
-    width:calc(100% + 41px) !important;
-    margin-left:-41px !important;
-  }
-}
-
-
-/* 댓글 본인삭제와 관리자삭제의 글자 스타일 통일 */
-.comment-top .delete-button,
-.comment-top .admin-delete-button {
-  border:0 !important;
-  background:transparent !important;
-  box-shadow:none !important;
-  padding:2px 0 !important;
-  color:#a56b89 !important;
-  font-size:11px !important;
-  font-weight:400 !important;
-}
-
-/* 전체 색감: 기존 분위기를 유지하면서 부드러운 라벤더·로즈 톤으로 미세 조정 */
-:root {
-  --accent: #9b82ad;
-  --accent-dark: #80658f;
-}
-
-
-/* 본인삭제는 작성한 브라우저에 소유 기록이 있는 글/댓글에만 HTML로 생성 */
-.post-actions .delete-button,
-.comment-top .delete-button {
-  display:inline-block;
-}
-
-
-
-/* 작성자 본인삭제 버튼은 관리자삭제 버튼과 동일한 글자 스타일 */
-.post-actions .delete-button,
-.comment-top .delete-button {
-  display:inline-block;
-  color:#a56b89 !important;
-  font-size:11px !important;
-  font-weight:400 !important;
-}
-
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&family=Pretendard:wght@300;400;500;600;700;800&display=swap');
+:root{--rose:#a96f70;--rose-dark:#805354;--rose-soft:#c58e8d;--ink:#574747;--muted:#927d78;--gold:#c9a66b;--gold-light:#e8d7b7;--line:rgba(190,151,119,.42);--paper:rgba(255,252,248,.91);--shadow:0 8px 26px rgba(111,78,68,.09)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;}
+body{font-family:"Pretendard",sans-serif;color:var(--ink);background:#f2d9d5 url("background_blossom_gold.png") center top/100% auto repeat-y fixed;}
+.page{width:min(1080px,calc(100% - 40px));margin:0 auto;padding:0 0 30px;}
+.hero{height:310px;width:100%;display:flex;align-items:flex-start;justify-content:center;text-align:center;padding:48px 16px 0;background:transparent;}
+.hero-title-wrap{max-width:760px;padding:18px 30px 16px;border:0;border-radius:0;background:transparent;box-shadow:none;backdrop-filter:none}
+.hero-kicker{margin:0 0 9px;color:#a27d69;font-size:12px;font-weight:700;letter-spacing:.22em}
+.hero h1{margin:0;color:#87595a;font-family:"Noto Serif KR",serif;font-size:clamp(25px,4vw,39px);font-weight:600;letter-spacing:-.055em;line-height:1.35;text-shadow:0 1px 0 rgba(255,255,255,.65)}
+.hero-subtitle{margin:10px 0 0;color:#8c6b66;font-family:"Noto Serif KR",serif;font-size:15px;letter-spacing:-.025em}
+.composer{position:relative;height:auto;min-height:136px;margin:0 0 14px;padding:25px 30px 15px;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
+.composer::before{content:"✦ 마음 전하기";position:absolute;left:25px;top:-16px;min-width:125px;height:32px;padding:0 13px;background:linear-gradient(135deg,#bd8984,#9d6968);border:1px solid rgba(255,255,255,.65);border-radius:20px;color:#fffaf5;font-family:"Noto Serif KR",serif;font-size:13px;font-weight:600;letter-spacing:.02em;text-align:center;line-height:30px;box-shadow:0 3px 9px rgba(117,75,70,.15);z-index:2}
+.composer-top{display:grid;grid-template-columns:115px minmax(0,275px) 190px;gap:12px;align-items:center;margin-bottom:10px}
+.content-label{display:flex;align-items:center;margin:0}
+.field-label{font-size:14px;font-weight:700;color:#896361;white-space:nowrap}
+.field-label:before{content:"♡";color:#bd8984;font-size:18px;margin-right:7px}
+#target,#postPassword{width:100%;min-width:0;height:38px;padding:8px 12px;border:1px solid #dfc9bd;border-radius:9px;background:rgba(255,255,255,.83);font:13px "Pretendard",sans-serif;color:var(--ink)}
+.composer-bottom{display:grid;grid-template-columns:115px minmax(0,1fr) 140px;gap:12px;align-items:center}
+#content{width:100%;height:48px;min-height:48px;resize:vertical;padding:11px 14px;border:1px solid #dfc9bd;border-radius:10px;background:rgba(255,255,255,.83);font:14px "Pretendard",sans-serif;line-height:1.55;color:var(--ink)}
+input:focus,textarea:focus{outline:2px solid rgba(201,166,107,.24);border-color:#bd9180}
+::placeholder{color:#b19d94}
+.submit{height:58px;border:1px solid rgba(255,255,255,.7);border-radius:12px;background:linear-gradient(135deg,#bd8984,#956766);box-shadow:0 3px 0 #815a59;color:#fffaf6;font-size:15px;font-weight:700;letter-spacing:.02em;cursor:pointer}
+.submit:hover{filter:brightness(1.04)}
+button{font-family:inherit;cursor:pointer}
+button:disabled{opacity:.55;cursor:wait}
+.status{min-height:16px;margin-top:7px;text-align:center;color:#9b6965;font-size:12px}
+.posts{display:grid;gap:11px}
+.post{min-height:139px;display:grid;grid-template-columns:76px minmax(0,1fr);gap:16px;padding:16px 23px 13px;background:var(--paper);border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
+.heart-count{width:68px;height:68px;margin-top:2px;border:1px solid #e7d2c4;border-radius:50%;background:linear-gradient(145deg,#fff9f4,#f2dfd8);display:flex;align-items:center;justify-content:center;color:#b77f7d;font-family:"Noto Serif KR",serif;font-size:29px;font-weight:500}
+.post-main{min-width:0}
+.post-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:1px 0 6px}
+.target{font-family:"Noto Serif KR",serif;font-size:17px;font-weight:700;color:#805b59}
+.date{font-size:11px;color:#a18d84;white-space:nowrap}
+.post-content{white-space:pre-wrap;font-size:15px;line-height:1.7;margin:0 0 8px;color:#5f504c;overflow-wrap:anywhere}
+.post-actions{text-align:right;margin-top:-3px}
+.delete-button{border:0;background:transparent;color:#a28d85;font-size:11px;padding:3px 5px}
+.admin-button{color:#986967}
+.comments{margin:6px 0;padding:0;background:transparent}
+.comment{padding:8px 0;border-bottom:1px solid rgba(201,166,107,.2)}
+.comment:last-child{border:0}
+.comment-top{display:flex;justify-content:space-between;color:#a17670;font-size:11px;margin-bottom:4px}
+.comment-content{font-size:13px;line-height:1.6;white-space:pre-wrap;color:#645653;overflow-wrap:anywhere}
+.comment-actions{text-align:right}
+.comment-area{display:flex;align-items:center;gap:10px;min-width:0;margin-top:7px}
+.comment-count{font-size:12px;color:#927d78;white-space:nowrap}
+.comment-count:before{content:"♡";margin-right:5px;color:#b98780}
+.comment-form{display:grid;grid-template-columns:minmax(0,1fr) 155px auto;gap:7px;flex:1;min-width:0}
+.comment-form input{min-width:0;width:100%;height:35px;padding:8px 12px;border:1px solid #e2cfc4;border-radius:9px;background:rgba(255,255,255,.8);font:12px "Pretendard",sans-serif;color:var(--ink)}
+.comment-form button{height:35px;padding:0 17px;border:0;border-radius:9px;background:#ad7b77;color:#fffaf6;font-size:12px;font-weight:700}
+.empty{text-align:center;padding:35px;background:var(--paper);border:1px solid var(--line);border-radius:16px;color:#9c8179;line-height:1.8;box-shadow:var(--shadow)}
+.footer{text-align:center;padding:19px 0 7px;color:#956d68;font:600 16px "Noto Serif KR",serif;letter-spacing:-.02em}
+.admin-area{margin-top:10px;font-family:"Pretendard",sans-serif}
+.admin-login{padding:5px;border:0;background:transparent;color:#a28d85;font-size:10px}
+.admin-state{font-size:11px;color:#986967}
+@media(max-width:700px){
+ body{background-attachment:scroll;background-size:100% auto}
+ .page{width:calc(100% - 24px)}
+ .hero{height:235px;padding:36px 5px 0}
+ .hero-title-wrap{padding:15px 13px 13px;border:0;border-radius:0;background:transparent;box-shadow:none;backdrop-filter:none}
+ .hero-kicker{font-size:10px;letter-spacing:.16em}
+ .hero h1{font-size:clamp(22px,6vw,30px)}
+ .hero-subtitle{font-size:13px}
+ .composer{padding:22px 14px 15px;min-height:0}
+ .composer::before{left:13px;top:-15px;min-width:112px;height:30px;font-size:12px;line-height:28px}
+ .composer-top{grid-template-columns:105px minmax(0,1fr);gap:8px;margin-bottom:9px}
+ #target{width:100%}
+ #postPassword{grid-column:2;width:175px;max-width:100%}
+ .composer-bottom{grid-template-columns:105px minmax(0,1fr);gap:8px}
+ .content-label{margin:0 0 1px}
+ #content{height:58px;min-height:58px}
+ .composer-bottom .submit{grid-column:1 / -1}
+ .submit{height:48px}
+ .post{grid-template-columns:52px minmax(0,1fr);gap:10px;padding:13px 12px;min-height:0}
+ .heart-count{width:50px;height:50px;font-size:23px}
+ .comment-area{flex-wrap:wrap}
+ .comment-form{flex-basis:100%;grid-template-columns:minmax(0,1fr) 125px auto;gap:5px}
+ .comment-form button{padding:0 12px}
+}
+@media(max-width:420px){.hero{height:220px}.post-head{align-items:flex-start;flex-direction:column;gap:3px}.post-content{font-size:14px}}
 </style>
 </head>
 <body>
 <main class="page">
-  <header class="hero" aria-label="곰돌이와 하트 배경"></header>
-
-  <div class="confession-intro">익명으로 솔직한 마음을 전해요 <span aria-hidden="true">♥</span></div>
-
+  <header class="hero" aria-label="4050 김포 인천 싱글모임 비밀 고백게시판">
+    <div class="hero-title-wrap">
+      <p class="hero-kicker">4050 김포/인천 싱글모임</p>
+      <h1>비밀 고백게시판</h1>
+      <p class="hero-subtitle">마음속에만 담아두지 말고, 익명으로 솔직한 마음을 전해보세요 ♡</p>
+    </div>
+  </header>
   <section class="composer">
     <form id="confessionForm">
       <div class="composer-top">
         <label class="field-label" for="target">상대방 닉네임</label>
-        <input id="target" type="text" maxlength="40" placeholder="예) 고니, 수니 등" required>
+        <input id="target" type="text" maxlength="40" placeholder="상대방 닉네임" required>
+        <input id="postPassword" type="password" minlength="4" maxlength="50" autocomplete="new-password" placeholder="비밀번호(4자 이상)" required aria-label="게시글 삭제 비밀번호">
       </div>
       <div class="composer-bottom">
-        <div class="confession-label-wrap">
-          <label class="field-label" for="content">고백 내용</label>
-          <input id="postPassword" type="password" minlength="4" maxlength="50"
-            autocomplete="new-password" placeholder="비밀번호" required
-            aria-label="게시글 비밀번호">
-        </div>
-        <textarea id="content" maxlength="1500"
-          placeholder="하고 싶은 말을 적어주세요... 💕" required></textarea>
+        <label class="field-label content-label" for="content">고백 내용</label>
+        <textarea id="content" maxlength="1500" placeholder="하고 싶은 말을 적어주세요... 💕" required></textarea>
         <button class="submit" id="submitButton" type="submit">✎ 등록하기</button>
       </div>
       <div class="status" id="formStatus" aria-live="polite"></div>
     </form>
   </section>
-
-  <section id="postList" class="posts" aria-live="polite">
-    <div class="empty">고백을 불러오고 있습니다...</div>
-  </section>
-
-  <footer class="footer">💗 좋은 마음이 모여 더 따뜻한 모임이 <span class="footer-last-line">되길 바라요 💗</span></footer>
-  <div class="admin-area">
-    <span class="admin-status" id="adminStatus" aria-hidden="true"></span>
-    <button class="admin-login-button" id="adminLoginButton" type="button">관리자 모드</button>
-    <button class="admin-logout-button" id="adminLogoutButton" type="button" hidden>관리자 로그아웃</button>
-  </div>
+  <section id="postList" class="posts" aria-live="polite"><div class="empty">고백을 불러오고 있습니다...</div></section>
+  <footer class="footer">
+    💗 좋은 마음이 모여 더 따뜻한 모임이 되길 바라요 💗
+    <div class="admin-area">
+      <span id="adminState" class="admin-state"></span>
+      <button id="adminDeleteAllButton" class="admin-login" type="button">관리자 전체 게시글·댓글 삭제</button>
+    </div>
+  </footer>
 </main>
-
 <script>
-/* =====================================================
-   1. Supabase 연결 설정
-   아래 주소는 사용자가 지정한 새 프로젝트 주소입니다.
-   SUPABASE_ANON_KEY에는 새 프로젝트의 Publishable key
-   또는 anon public key를 입력하세요.
-   service_role / secret 키는 절대 입력하지 마세요.
-===================================================== */
-const SUPABASE_URL = "https://dxxbhfzcjxfozlwefyyr.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_j9Il9T-1Q0hpEz3zYDftqw_2ijySaCv";
-
-if (!window.supabase) {
-  alert("Supabase 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.");
-}
+const SUPABASE_URL = "https://vuvzchrhbdgtsfjoobrb.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_E0GSkkS2vp-oknFC9nfvAg_Ky-JhpBH";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 const postList = document.getElementById("postList");
-/* 댓글 개수 버튼 클릭: 동적으로 다시 그려져도 작동하도록 위임 처리 */
-postList.addEventListener("click", function(event) {
-  const toggleButton = event.target.closest("button[data-toggle-comments]");
-  if (!toggleButton || !postList.contains(toggleButton)) return;
-  event.preventDefault();
-  event.stopPropagation();
-  const postId = toggleButton.getAttribute("data-toggle-comments");
-  toggleComments(postId);
-});
 const formStatus = document.getElementById("formStatus");
-let isAdminMode = false;
-let openedCommentPosts = new Set();
 
-// 이 브라우저에서 직접 작성한 게시글/댓글만 본인 삭제 버튼 표시
-const OWNER_POSTS_KEY = "confession_owner_posts_v1";
-const OWNER_COMMENTS_KEY = "confession_owner_comments_v1";
-function readOwnerIds(key) {
-  try { return new Set(JSON.parse(localStorage.getItem(key) || "[]").map(String)); }
-  catch (_) { return new Set(); }
-}
-function saveOwnerId(key, id) {
-  if (id === null || id === undefined || id === "") return;
-  const ids = readOwnerIds(key);
-  ids.add(String(id));
-  try { localStorage.setItem(key, JSON.stringify([...ids])); } catch (_) {}
-}
-function returnedId(data) {
-  // Supabase RPC는 UUID, 객체, 배열 등 여러 형태로 값을 반환할 수 있음
-  if (typeof data === "string" || typeof data === "number") return data;
-  if (Array.isArray(data)) {
-    for (const item of data) {
-      const found = returnedId(item);
-      if (found !== null && found !== undefined && found !== "") return found;
-    }
-    return null;
-  }
-  if (data && typeof data === "object") {
-    const directKeys = ["id", "confession_id", "comment_id", "create_confession", "create_comment"];
-    for (const key of directKeys) {
-      if (data[key] !== undefined && data[key] !== null) {
-        const found = returnedId(data[key]);
-        if (found !== null && found !== undefined && found !== "") return found;
-      }
-    }
-    // RPC 함수명이나 반환 컬럼명이 다른 경우에도 첫 번째 값에서 ID 추출
-    for (const value of Object.values(data)) {
-      const found = returnedId(value);
-      if (found !== null && found !== undefined && found !== "") return found;
-    }
-  }
-  return null;
-}
-
-/* HTML 문자 안전 처리 */
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   }[char]));
 }
-
-/* 날짜 표시 */
 function formatDate(value) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleString("ko-KR", {
-    month:"long", day:"numeric", hour:"2-digit", minute:"2-digit"
+  return new Date(value).toLocaleString("ko-KR", {
+    month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"
   });
 }
 
-/* 댓글 ID를 기준으로 새로고침해도 바뀌지 않는 무작위 5글자 닉네임 */
-function commentNickname(id) {
-  const chars = Array.from("가나다라마바사아자차카타파하거너더러머버서어저처커터퍼허고노도로모보소오조초코토포호구누두루무부수우주추쿠투푸후");
-  const seedText = String(id ?? "comment");
-  let seed = 2166136261;
-  for (let i = 0; i < seedText.length; i++) {
-    seed ^= seedText.charCodeAt(i);
-    seed = Math.imul(seed, 16777619);
-  }
-  let result = "";
-  for (let i = 0; i < 5; i++) {
-    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
-    result += chars[seed % chars.length];
-  }
-  return result;
-}
-
-function setAdminUI() {
-  document.getElementById("adminStatus").textContent = isAdminMode ? "관리자 모드" : "일반 모드";
-  document.getElementById("adminLoginButton").hidden = isAdminMode;
-  document.getElementById("adminLogoutButton").hidden = !isAdminMode;
-}
-
-/* 관리자 로그인 */
-async function adminLogin() {
-  const password = prompt("관리자 마스터 비밀번호를 입력하세요.");
-  if (password === null) return;
-  if (!password) { alert("비밀번호를 입력해 주세요."); return; }
-
-  try {
-    const { data, error } = await db.rpc("admin_check_password", { p_password:password });
-    if (error) throw error;
-    if (data !== true) { alert("관리자 비밀번호가 일치하지 않습니다."); return; }
-    isAdminMode = true;
-    setAdminUI();
-    alert("관리자 모드로 로그인했습니다.");
-    await loadPosts();
-  } catch (error) {
-    console.error("관리자 로그인 오류:", error);
-    alert("관리자 로그인에 실패했습니다.\n" + (error.message || "Supabase 설정을 확인해 주세요."));
-  }
-}
-
-function adminLogout() {
-  isAdminMode = false;
-  setAdminUI();
-  loadPosts();
-}
-
-document.getElementById("adminLoginButton").addEventListener("click", adminLogin);
-document.getElementById("adminLogoutButton").addEventListener("click", adminLogout);
-
-/* 게시글 등록 */
+// 고백 등록: 닉네임 옆 비밀번호 입력란의 값을 함께 저장합니다.
 document.getElementById("confessionForm").addEventListener("submit", async function(event) {
   event.preventDefault();
-
   const target = document.getElementById("target").value.trim();
   const content = document.getElementById("content").value.trim();
   const password = document.getElementById("postPassword").value;
@@ -1192,297 +148,185 @@ document.getElementById("confessionForm").addEventListener("submit", async funct
     formStatus.textContent = "닉네임, 고백 내용과 비밀번호(4자 이상)를 입력해 주세요.";
     return;
   }
-
   const button = document.getElementById("submitButton");
   button.disabled = true;
   formStatus.textContent = "고백을 등록하고 있습니다...";
-
   try {
-    const { data:createdPost, error } = await db.rpc("create_confession", {
-      p_target_nickname:target, p_content:content, p_password:password
+    const { error } = await db.rpc("create_confession", {
+      p_target_nickname:target,p_content:content,p_password:password
     });
     if (error) throw error;
-
-    // 함수가 ID를 반환하지 않는 경우 방금 등록한 글을 조회해 소유 표시를 저장
-    console.log("게시글 등록 반환값:", createdPost);
-    let newPostId = returnedId(createdPost);
-    if (newPostId === null) {
-      const { data:foundPost, error:findPostError } = await db.from("confessions").select("id")
-        .eq("target_nickname", target).eq("content", content)
-        .order("created_at", { ascending:false }).limit(1).maybeSingle();
-      if (findPostError) console.error("게시글 ID 확인 오류:", findPostError);
-      newPostId = foundPost?.id ?? null;
-    }
-    if (newPostId !== null) saveOwnerId(OWNER_POSTS_KEY, newPostId);
-
     this.reset();
     formStatus.textContent = "고백이 등록되었습니다. 💗";
     await loadPosts();
   } catch (error) {
-    console.error("게시글 등록 오류:", error);
-    formStatus.textContent = "등록 실패: " + (error.message || "Supabase 설정을 확인해 주세요.");
+    console.error(error);
+    formStatus.textContent = "등록에 실패했습니다. Supabase 설정을 확인해 주세요.";
   } finally {
     button.disabled = false;
   }
 });
 
-/* 게시글 및 댓글 불러오기 */
 async function loadPosts() {
-  postList.innerHTML = '<div class="empty">고백을 불러오고 있습니다...</div>';
-
-  const { data:posts, error } = await db
-    .from("confessions")
+  const { data:posts, error } = await db.from("confessions")
     .select("id,target_nickname,content,created_at")
-    .order("created_at", { ascending:false })
-    .limit(100);
-
+    .order("created_at",{ascending:false}).limit(100);
   if (error) {
-    console.error("게시글 조회 오류:", error);
-    postList.innerHTML = '<div class="empty">게시글을 불러오지 못했습니다. Supabase 테이블과 공개 조회 권한을 확인해 주세요.</div>';
+    console.error(error);
+    postList.innerHTML = '<div class="empty">게시글을 불러오지 못했습니다.</div>';
     return;
   }
-
   if (!posts || posts.length === 0) {
     postList.innerHTML = '<div class="empty">아직 도착한 고백이 없어요.<br>첫 번째 마음을 전해보세요 💗</div>';
     return;
   }
-
-  const ids = posts.map(post => post.id);
-  const { data:comments, error:commentError } = await db
-    .from("confession_comments")
+  const ids = posts.map(p => p.id);
+  const { data:comments, error:commentError } = await db.from("confession_comments")
     .select("id,confession_id,content,created_at")
-    .in("confession_id", ids)
-    .order("created_at", { ascending:true });
-
-  if (commentError) console.error("댓글 조회 오류:", commentError);
+    .in("confession_id",ids).order("created_at",{ascending:true});
+  if (commentError) console.error(commentError);
   const safeComments = comments || [];
 
-  postList.innerHTML = posts.map(post => {
-    const list = safeComments.filter(comment => String(comment.confession_id) === String(post.id));
-    const isOpen = openedCommentPosts.has(String(post.id));
-
+  postList.innerHTML = posts.map((post,index) => {
+    const list = safeComments.filter(c => c.confession_id === post.id);
     return `
       <article class="post">
         <div class="heart-count">♡</div>
         <div class="post-main">
           <div class="post-head">
-            <span class="target-name">${escapeHTML(post.target_nickname)}</span>
-            <span class="date">◷ ${escapeHTML(formatDate(post.created_at))}</span>
+            <span class="target">${escapeHTML(post.target_nickname)}</span>
+            <span class="date">◷ ${formatDate(post.created_at)}</span>
           </div>
-
           <p class="post-content">${escapeHTML(post.content)}</p>
-
           <div class="post-actions">
-            ${readOwnerIds(OWNER_POSTS_KEY).has(String(post.id)) ? `<button class="delete-button" type="button" onclick="deletePost('${escapeHTML(post.id)}')">게시물삭제</button>` : ""}
-            ${isAdminMode ? `<button class="admin-delete-button" type="button" onclick="adminDeletePost('${escapeHTML(post.id)}')">관리자 삭제</button>` : ""}
+            <button class="delete-button" type="button" onclick="deletePost('${post.id}')">본인 삭제</button>
+            
           </div>
-<div class="comment-panel ${isOpen ? "open" : ""}" id="comment-panel-${escapeHTML(post.id)}">
-            <div class="comments">
-              ${list.length ? list.map(comment => `
-                <div class="comment">
-                  <div class="comment-top">
-                    <span>${escapeHTML(commentNickname(comment.id))}</span>
-                    ${readOwnerIds(OWNER_COMMENTS_KEY).has(String(comment.id)) ? `<button class="delete-button" type="button" onclick="deleteComment('${escapeHTML(comment.id)}')">댓글삭제</button>` : ""} 
-                    ${isAdminMode ? `<button class="admin-delete-button" type="button" onclick="adminDeleteComment('${escapeHTML(comment.id)}')">관리자 댓글삭제</button>` : ""}
-                  </div>
-                  <div class="comment-content">${escapeHTML(comment.content)}</div>
+          <div class="comments">
+            ${list.map(c => `
+              <div class="comment">
+                <div class="comment-top"><span>익명</span><span>${formatDate(c.created_at)}</span></div>
+                <div class="comment-content">${escapeHTML(c.content)}</div>
+                <div class="comment-actions">
+                  <button class="delete-button" type="button" onclick="deleteComment('${c.id}')">본인 삭제</button>
+                  
                 </div>
-              `).join("") : '<div class="comment-empty">아직 댓글이 없습니다. 첫 댓글을 남겨보세요. 💗</div>'}
-            </div>
+              </div>`).join("")}
           </div>
-
-          <form class="comment-form" data-post-id="${escapeHTML(post.id)}">
-            <div class="comment-password-wrap">
-              <input name="password" type="password" minlength="4" maxlength="50"
-                autocomplete="new-password" placeholder="비밀번호" required aria-label="댓글 비밀번호">
-            </div>
-            <input name="comment" maxlength="500" placeholder="댓글을 입력해보세요..." required>
-            <button type="submit">등록</button>
-          </form>
-          <div class="comment-toggle-row">
-            <button class="comment-toggle" type="button"
-              aria-expanded="${isOpen ? "true" : "false"}"
-              aria-controls="comment-panel-${escapeHTML(post.id)}"
-              data-toggle-comments="${escapeHTML(post.id)}">
-              댓글 ${list.length}개 <span class="arrow" aria-hidden="true"></span>
-            </button>
+          <div class="comment-area">
+            <span class="comment-count">댓글 ${list.length}개</span>
+            <form class="comment-form" data-post-id="${post.id}">
+              <input name="comment" maxlength="500" placeholder="댓글을 입력해보세요..." required>
+              <input name="password" type="password" minlength="4" maxlength="50" autocomplete="new-password" placeholder="비밀번호(4자 이상)" required aria-label="댓글 삭제 비밀번호">
+              <button type="submit">등록</button>
+            </form>
           </div>
-          <div class="comment-status" aria-live="polite"></div>
         </div>
-      </article>
-    `;
+      </article>`;
   }).join("");
 
-  document.querySelectorAll(".comment-form").forEach(form => {
-    form.addEventListener("submit", addComment);
-  });
+  document.querySelectorAll(".comment-form").forEach(form => form.addEventListener("submit",addComment));
 }
 
-/* 댓글 열기 / 닫기 */
-function toggleComments(postId) {
-  const id = String(postId);
-  const isNowOpen = !openedCommentPosts.has(id);
-  if (isNowOpen) openedCommentPosts.add(id);
-  else openedCommentPosts.delete(id);
-
-  // 버튼의 data 값으로 해당 댓글 영역을 찾아 표시 상태를 변경
-  const button = [...postList.querySelectorAll("button[data-toggle-comments]")]
-    .find(item => item.getAttribute("data-toggle-comments") === id);
-  const panelId = button?.getAttribute("aria-controls");
-  const panel = panelId ? document.getElementById(panelId) : null;
-
-  if (panel) {
-    panel.classList.toggle("open", isNowOpen);
-    panel.style.display = isNowOpen ? "block" : "none";
-  }
-  if (button) {
-    button.setAttribute("aria-expanded", isNowOpen ? "true" : "false");
-  }
-}
-
-/* 댓글 등록 후 해당 게시글 댓글 영역 자동 열기 */
 async function addComment(event) {
   event.preventDefault();
   const form = event.currentTarget;
-  const postId = form.dataset.postId;
   const content = form.elements.comment.value.trim();
   const password = form.elements.password.value;
-
   if (!content || password.length < 4) {
     alert("댓글과 비밀번호(4자 이상)를 입력해 주세요.");
     return;
   }
-
-  const button = form.querySelector("button[type='submit']");
-  const status = form.parentElement.querySelector(".comment-status");
+  const button = form.querySelector("button");
   button.disabled = true;
-  status.textContent = "댓글을 등록하고 있습니다...";
-
   try {
-    const { data:createdComment, error } = await db.rpc("create_comment", {
-      p_confession_id:postId, p_content:content, p_password:password
+    const { error } = await db.rpc("create_comment", {
+      p_confession_id:form.dataset.postId,p_content:content,p_password:password
     });
     if (error) throw error;
-
-    console.log("댓글 등록 반환값:", createdComment);
-    let newCommentId = returnedId(createdComment);
-    if (newCommentId === null) {
-      const { data:foundComment, error:findCommentError } = await db.from("confession_comments").select("id")
-        .eq("confession_id", postId).eq("content", content)
-        .order("created_at", { ascending:false }).limit(1).maybeSingle();
-      if (findCommentError) console.error("댓글 ID 확인 오류:", findCommentError);
-      newCommentId = foundComment?.id ?? null;
-    }
-    if (newCommentId !== null) saveOwnerId(OWNER_COMMENTS_KEY, newCommentId);
-
-    openedCommentPosts.add(String(postId));
     await loadPosts();
-  } catch (error) {
-    console.error("댓글 등록 오류:", error);
-    status.textContent = "댓글 등록 실패: " + (error.message || "다시 시도해 주세요.");
+  } catch(error) {
+    console.error(error);
+    alert("댓글 등록에 실패했습니다. 다시 시도해 주세요.");
     button.disabled = false;
   }
 }
 
-/* 본인 게시글 삭제 */
 async function deletePost(postId) {
   const password = prompt("게시글 작성 시 설정한 삭제 비밀번호를 입력해 주세요.");
   if (password === null) return;
   if (!password) { alert("비밀번호를 입력해 주세요."); return; }
   if (!confirm("이 게시글과 댓글을 모두 삭제할까요?")) return;
-
   try {
-    const { data, error } = await db.rpc("delete_confession", {
-      p_post_id:postId, p_password:password
-    });
+    const { data,error } = await db.rpc("delete_confession",{p_post_id:postId,p_password:password});
     if (error) throw error;
     if (data !== true) { alert("비밀번호가 일치하지 않거나 삭제할 수 없는 게시글입니다."); return; }
-    openedCommentPosts.delete(String(postId));
-    const ownedPosts = readOwnerIds(OWNER_POSTS_KEY); ownedPosts.delete(String(postId));
-    try { localStorage.setItem(OWNER_POSTS_KEY, JSON.stringify([...ownedPosts])); } catch (_) {}
     alert("게시글이 삭제되었습니다.");
     await loadPosts();
-  } catch (error) {
-    console.error("게시글 삭제 오류:", error);
-    alert("게시글 삭제 실패: " + (error.message || "다시 시도해 주세요."));
+  } catch(error) {
+    console.error(error);alert("게시글 삭제에 실패했습니다.");
   }
 }
 
-/* 본인 댓글 삭제 */
 async function deleteComment(commentId) {
   const password = prompt("댓글 작성 시 설정한 삭제 비밀번호를 입력해 주세요.");
   if (password === null) return;
   if (!password) { alert("비밀번호를 입력해 주세요."); return; }
   if (!confirm("이 댓글을 삭제할까요?")) return;
-
   try {
-    const { data, error } = await db.rpc("delete_comment", {
-      p_comment_id:commentId, p_password:password
-    });
+    const { data,error } = await db.rpc("delete_comment",{p_comment_id:commentId,p_password:password});
     if (error) throw error;
     if (data !== true) { alert("비밀번호가 일치하지 않거나 삭제할 수 없는 댓글입니다."); return; }
-    const ownedComments = readOwnerIds(OWNER_COMMENTS_KEY); ownedComments.delete(String(commentId));
-    try { localStorage.setItem(OWNER_COMMENTS_KEY, JSON.stringify([...ownedComments])); } catch (_) {}
     alert("댓글이 삭제되었습니다.");
     await loadPosts();
-  } catch (error) {
-    console.error("댓글 삭제 오류:", error);
-    alert("댓글 삭제 실패: " + (error.message || "다시 시도해 주세요."));
+  } catch(error) {
+    console.error(error);alert("댓글 삭제에 실패했습니다.");
   }
 }
 
-/* 관리자 모드에서 댓글 하나만 별도로 삭제 */
-async function adminDeleteComment(commentId) {
-  if (!isAdminMode) { alert("관리자 로그인 후 이용해 주세요."); return; }
-  if (!confirm("선택한 댓글만 삭제할까요? 게시글은 삭제되지 않습니다.")) return;
+// 관리자 전체 삭제: SQL의 admin_delete_all(text) 함수를 직접 호출합니다.
+document.getElementById("adminDeleteAllButton").addEventListener("click", async function() {
+  const confirmed = confirm("정말 모든 게시글과 댓글을 삭제하시겠습니까?\n삭제 후 복구할 수 없습니다.");
+  if (!confirmed) return;
 
-  const password = prompt("관리자 마스터 비밀번호를 다시 입력해 주세요.");
+  const password = prompt("Supabase에 설정한 관리자 마스터 비밀번호를 입력해 주세요.");
   if (password === null) return;
-  if (!password) { alert("관리자 비밀번호를 입력해 주세요."); return; }
+  if (!password) {
+    alert("관리자 비밀번호를 입력해 주세요.");
+    return;
+  }
 
+  const button = this;
+  button.disabled = true;
   try {
-    const { data, error } = await db.rpc("admin_delete_comment", {
-      p_comment_id: commentId,
+    const { data, error } = await db.rpc("admin_delete_all", {
       p_password: password
     });
-    if (error) throw error;
-    if (data !== true) {
-      alert("관리자 비밀번호가 틀렸거나 댓글을 찾을 수 없습니다.");
+
+    if (error) {
+      console.error("관리자 전체 삭제 오류:", error);
+      alert(
+        "전체 삭제에 실패했습니다.\n" +
+        "오류 코드: " + (error.code || "없음") + "\n" +
+        "오류 내용: " + (error.message || "알 수 없는 오류")
+      );
       return;
     }
-    alert("댓글이 삭제되었습니다.");
-    await loadPosts();
+
+    if (data === true) {
+      alert("모든 게시글과 댓글이 삭제되었습니다.");
+      await loadPosts();
+    } else {
+      alert("관리자 비밀번호가 일치하지 않습니다.");
+    }
   } catch (error) {
-    console.error("관리자 댓글 삭제 오류:", error);
-    alert("관리자 댓글 삭제 실패\\n" + (error.message || "Supabase의 admin_delete_comment 함수 설정을 확인해 주세요."));
+    console.error("관리자 전체 삭제 예외:", error);
+    alert("관리자 전체 삭제 중 오류가 발생했습니다: " + error.message);
+  } finally {
+    button.disabled = false;
   }
-}
+});
 
-/* 관리자 게시글 및 해당 댓글 삭제 */
-async function adminDeletePost(postId) {
-  if (!isAdminMode) { alert("관리자 로그인 후 이용해 주세요."); return; }
-  if (!confirm("선택한 게시글과 그 게시글의 댓글만 삭제합니다.\n\n계속하시겠습니까?")) return;
-
-  const password = prompt("관리자 마스터 비밀번호를 다시 입력해 주세요.");
-  if (password === null) return;
-  if (!password) { alert("관리자 비밀번호를 입력해 주세요."); return; }
-
-  try {
-    const { data, error } = await db.rpc("admin_delete_one", {
-      p_post_id:postId, p_password:password
-    });
-    if (error) throw error;
-    if (data !== true) { alert("관리자 비밀번호가 틀렸거나 게시글을 찾을 수 없습니다."); return; }
-    openedCommentPosts.delete(String(postId));
-    alert("선택한 게시글과 댓글이 삭제되었습니다.");
-    await loadPosts();
-  } catch (error) {
-    console.error("관리자 게시글 삭제 오류:", error);
-    alert("관리자 삭제 실패\n" + (error.message || "Supabase 함수와 권한을 확인해 주세요."));
-  }
-}
-
-/* 최초 실행 */
 loadPosts();
 </script>
 </body>
