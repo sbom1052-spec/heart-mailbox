@@ -2538,5 +2538,130 @@ loadPosts();
 }
 </style>
 
+
+
+<style>
+/* 2026-11-27 사용자 요청: 하트·게시글 본문·작성 영역 정렬 최종 보정 */
+/* 하트 동그라미는 닉네임 줄의 세로 중앙에 맞춤 */
+.post {
+  align-items: start !important;
+  grid-template-columns: 76px minmax(0, 1fr) !important;
+}
+.post .heart-count {
+  align-self: start !important;
+  justify-self: center !important;
+  margin-top: 0 !important;
+}
+/* 게시글은 본문 칸의 왼쪽 시작점에 두고, 하트 원의 중앙 높이에 가깝게 배치 */
+.post .post-main {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+.post .post-head {
+  justify-content: flex-start !important;
+  align-items: center !important;
+  margin: 0 0 0 !important;
+}
+.post .post-content {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  margin: 2px 0 7px !important; /* 반 칸 아래 */
+  padding: 0 !important;
+  text-align: left !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+/* 고백 내용 라벨 바로 옆에 비밀번호 입력칸 배치 */
+.content-heading-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+.content-heading-row .content-label {
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+}
+.content-heading-row #postPassword {
+  flex: 0 0 118px !important;
+  width: 118px !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  height: 33px !important;
+  min-height: 33px !important;
+  box-sizing: border-box !important;
+}
+@media (max-width:700px) {
+  .post {
+    grid-template-columns: 48px minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+  .post .heart-count {
+    align-self: start !important;
+    justify-self: center !important;
+    margin-top: 0 !important;
+  }
+  .post .post-content {
+    margin: 2px 0 7px !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 15px !important;
+    text-align: left !important;
+  }
+  .content-heading-row {
+    gap: 8px !important;
+  }
+  .content-heading-row #postPassword {
+    flex-basis: 66px !important;
+    width: 66px !important;
+    height: 33px !important;
+    min-height: 33px !important;
+    font-size: 11px !important;
+  }
+}
+</style>
+
 </body>
 </html>
+
+<style>
+/* 최종 정렬: 고백 비밀번호 입력칸의 왼쪽 끝을 닉네임 입력칸과 일치 */
+.content-heading-row {
+  display: grid !important;
+  grid-template-columns: 145px minmax(0, 1fr) !important;
+  column-gap: 12px !important;
+  align-items: center !important;
+  justify-content: initial !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+.content-heading-row .content-label {
+  grid-column: 1 !important;
+  margin: 0 !important;
+}
+.content-heading-row #postPassword {
+  grid-column: 2 !important;
+  justify-self: start !important;
+  width: 118px !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+@media (max-width:700px) {
+  .content-heading-row {
+    grid-template-columns: 105px minmax(0, 1fr) !important;
+    column-gap: 8px !important;
+  }
+  .content-heading-row #postPassword {
+    width: 66px !important;
+  }
+}
+</style>
