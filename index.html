@@ -2199,8 +2199,7 @@ loadPosts();
 }
 </style>
 
-</body>
-</html>
+
 
 <style>
 /* 2026-11-27 사용자 추가 요청: 모바일 화면 세부 간격 및 크기 조정 */
@@ -2438,3 +2437,47 @@ loadPosts();
 }
 /* 댓글 입력 네모칸의 기존 왼쪽 위치와 크기는 변경하지 않음 */
 </style>
+
+<style>
+/* 2026-11-27 최종 정렬: 게시글 내용 2px 아래·오른쪽, 댓글 글꼴을 게시글과 통일 */
+.post .post-content {
+  display: block !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  margin-left: 2px !important;
+  margin-top: 4px !important;
+  text-align: left !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  font-family: "Gowun Dodum", sans-serif !important;
+  font-size: 18px !important;
+  line-height: 1.45 !important;
+}
+.post .comment-content {
+  margin-left: 0 !important;
+  text-align: left !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  font-family: "Gowun Dodum", sans-serif !important;
+  font-size: 18px !important;
+  line-height: 1.45 !important;
+}
+@media (max-width:700px) {
+  .post .post-content {
+    margin-left: 2px !important;
+    margin-top: -3px !important; /* 기존 위치에서 2px 아래 */
+    font-size: 15px !important;
+    line-height: 1.45 !important;
+  }
+  .post .comment-content {
+    font-size: 15px !important;
+    line-height: 1.45 !important;
+  }
+}
+</style>
+
+</body>
+</html>
