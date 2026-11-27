@@ -1356,6 +1356,26 @@ input:focus,textarea:focus{outline:2px solid rgba(207,130,139,.22)!important;bor
   .content-heading-row { gap:6px; }
 }
 
+
+
+/* ===== 추가 요청: 부제목 간격·입력 항목 글씨·게시글 내용 위치 ===== */
+.site-subtitle { margin-top:42px !important; }
+.field-label { font-size:15px !important; }
+/* 게시글 내용은 닉네임/날짜 아래에서 하트 아이콘의 왼쪽 기준선에 맞춤 */
+.post-content {
+  margin-left:calc(-76px - 16px) !important;
+  width:calc(100% + 92px) !important;
+  text-align:left !important;
+}
+@media(max-width:700px) {
+  .site-subtitle { margin-top:41px !important; }
+  .field-label { font-size:14px !important; }
+  .post-content {
+    margin-left:calc(-48px - 10px) !important;
+    width:calc(100% + 58px) !important;
+  }
+}
+
 </style>
 </head>
 <body>
