@@ -1678,6 +1678,65 @@ input:focus,textarea:focus{outline:2px solid rgba(207,130,139,.22)!important;bor
 }
 
 </style>
+
+
+<style>
+/* 게시글 내용이 카드 밖으로 밀려나가지 않도록 최종 폭/줄바꿈 보정 */
+.post {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  grid-template-columns: 76px minmax(0, 1fr) !important;
+}
+.post .post-main {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+.post .post-head {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+.post .target-name,
+.post .date {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+.post .post-content {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  margin-left: 2px !important;
+  padding-right: 2px !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-all !important;
+  text-align: left !important;
+}
+@media (max-width: 700px) {
+  .post {
+    grid-template-columns: 48px minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+  .post .post-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 2px !important;
+    padding-right: 2px !important;
+    font-size: 15px !important;
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-all !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <main class="page">
@@ -2172,8 +2231,34 @@ loadPosts();
 }
 </style>
 
-</body>
-</html>
+
+
+<style>
+/* 2026-11-27 추가 조정: 게시글 위치와 댓글 글꼴을 게시글 본문에 맞춤 */
+.post .post-content {
+  margin-top: 4px !important; /* 기존보다 2px 아래로 */
+  margin-left: 2px !important; /* 기존보다 오른쪽으로 2px */
+  text-align: left !important;
+  font-family: "Gowun Dodum", sans-serif !important;
+  font-size: 18px !important;
+}
+.post .comment-content {
+  font-family: "Gowun Dodum", sans-serif !important;
+  font-size: 18px !important;
+}
+@media (max-width:700px) {
+  .post .post-content {
+    margin-top: -3px !important; /* 모바일 기존 -5px에서 2px 아래로 */
+    margin-left: 2px !important;
+    font-size: 15px !important;
+  }
+  .post .comment-content {
+    font-size: 15px !important;
+  }
+}
+</style>
+
+
 
 <style>
 /* 2026-11-27 사용자 추가 요청: 모바일 화면 세부 간격 및 크기 조정 */
@@ -2411,3 +2496,47 @@ loadPosts();
 }
 /* 댓글 입력 네모칸의 기존 왼쪽 위치와 크기는 변경하지 않음 */
 </style>
+
+<style>
+/* 2026-11-27 최종 정렬: 게시글 내용 2px 아래·오른쪽, 댓글 글꼴을 게시글과 통일 */
+.post .post-content {
+  display: block !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  margin-left: 2px !important;
+  margin-top: 4px !important;
+  text-align: left !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  font-family: "Gowun Dodum", sans-serif !important;
+  font-size: 18px !important;
+  line-height: 1.45 !important;
+}
+.post .comment-content {
+  margin-left: 0 !important;
+  text-align: left !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  font-family: "Gowun Dodum", sans-serif !important;
+  font-size: 18px !important;
+  line-height: 1.45 !important;
+}
+@media (max-width:700px) {
+  .post .post-content {
+    margin-left: 2px !important;
+    margin-top: -3px !important; /* 기존 위치에서 2px 아래 */
+    font-size: 15px !important;
+    line-height: 1.45 !important;
+  }
+  .post .comment-content {
+    font-size: 15px !important;
+    line-height: 1.45 !important;
+  }
+}
+</style>
+
+</body>
+</html>
