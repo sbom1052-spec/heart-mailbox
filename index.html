@@ -1712,7 +1712,6 @@ input:focus,textarea:focus{outline:2px solid rgba(207,130,139,.22)!important;bor
     <div class="empty">고백을 불러오고 있습니다...</div>
   </section>
 
-  <footer class="footer">좋은 마음이 모여 더 따뜻한 모임이 <span class="footer-last-line">되길 바라요</span></footer>
   <div class="admin-area">
     <span class="admin-status" id="adminStatus" aria-hidden="true"></span>
     <button class="admin-login-button" id="adminLoginButton" type="button">관리자 모드</button>
@@ -2162,6 +2161,17 @@ async function adminDeletePost(postId) {
 /* 최초 실행 */
 loadPosts();
 </script>
+
+<style>
+/* 게시글 하트 원형을 상대방 닉네임과 같은 위쪽 위치에 정렬 */
+.post { align-items: flex-start !important; }
+.post .heart-count { align-self: flex-start !important; margin-top: 0 !important; }
+@media (max-width:700px) {
+  .post { align-items: flex-start !important; }
+  .post .heart-count { align-self: flex-start !important; margin-top: 0 !important; }
+}
+</style>
+
 </body>
 </html>
 
