@@ -2172,6 +2172,33 @@ loadPosts();
 }
 </style>
 
+
+
+<style>
+/* 2026-11-27 추가 조정: 게시글 위치와 댓글 글꼴을 게시글 본문에 맞춤 */
+.post .post-content {
+  margin-top: 4px !important; /* 기존보다 2px 아래로 */
+  margin-left: 2px !important; /* 기존보다 오른쪽으로 2px */
+  text-align: left !important;
+  font-family: "Gowun Dodum", sans-serif !important;
+  font-size: 18px !important;
+}
+.post .comment-content {
+  font-family: "Gowun Dodum", sans-serif !important;
+  font-size: 18px !important;
+}
+@media (max-width:700px) {
+  .post .post-content {
+    margin-top: -3px !important; /* 모바일 기존 -5px에서 2px 아래로 */
+    margin-left: 2px !important;
+    font-size: 15px !important;
+  }
+  .post .comment-content {
+    font-size: 15px !important;
+  }
+}
+</style>
+
 </body>
 </html>
 
@@ -2391,4 +2418,23 @@ loadPosts();
     min-height: 33px !important;
   }
 }
+</style>
+
+<style>
+/* 2026-11-27: 게시글 내용은 하트 원의 가운데 높이에 맞추고 왼쪽 정렬 */
+.post .post-content {
+  text-align: left !important;
+  margin-left: 0 !important;
+  margin-top: 2px !important;
+  line-height: 1.45 !important;
+}
+/* 모바일에서는 하트 원이 작으므로 내용 첫 줄을 원의 중앙 높이에 맞춤 */
+@media (max-width:700px) {
+  .post .post-content {
+    text-align: left !important;
+    margin-left: 0 !important;
+    margin-top: -5px !important;
+  }
+}
+/* 댓글 입력 네모칸의 기존 왼쪽 위치와 크기는 변경하지 않음 */
 </style>
