@@ -1600,6 +1600,83 @@ input:focus,textarea:focus{outline:2px solid rgba(207,130,139,.22)!important;bor
   .post .heart-count { margin-top: 0 !important; }
 }
 
+
+
+/* ===== 2026-11-27 추가 요청 반영 ===== */
+/* 부제목을 한 단계 아래로 내리고 줄바꿈 문장 간격은 좁힘 */
+.site-subtitle {
+  margin-top: 28px !important;
+  line-height: 1.25 !important;
+  transform: none !important;
+}
+/* 마음 전하기·고백하기 문구는 상대방 닉네임 라벨보다 한 단계 크게 */
+.composer::before {
+  font-size: 16px !important;
+}
+.composer-bottom .submit {
+  font-size: 16px !important;
+}
+/* 닉네임 입력과 고백 내용 영역 사이 간격 축소 */
+.composer-top {
+  margin-bottom: 5px !important;
+}
+.composer-bottom {
+  gap: 6px !important;
+}
+/* 고백 비밀번호 입력칸을 댓글 비밀번호와 같은 크기로 맞추고
+   고백 내용 입력 영역의 오른쪽 끝에 정렬 */
+.content-heading-row {
+  align-items: flex-end !important;
+  gap: 8px !important;
+}
+.content-heading-row #postPassword {
+  width: 66px !important;
+  min-width: 66px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 4px 3px !important;
+  font-size: 11px !important;
+  margin-left: auto !important;
+  margin-bottom: 0 !important;
+  box-sizing: border-box !important;
+}
+/* 게시글 하트 원형을 게시글 카드 세로 중앙에 배치 */
+.post {
+  align-items: center !important;
+}
+.post .heart-count {
+  align-self: center !important;
+  margin-top: 0 !important;
+}
+@media (max-width:700px) {
+  .site-subtitle {
+    margin-top: 26px !important;
+    line-height: 1.25 !important;
+    transform: none !important;
+  }
+  .composer::before {
+    font-size: 15px !important;
+  }
+  .composer-bottom .submit {
+    font-size: 15px !important;
+  }
+  .composer-top {
+    margin-bottom: 4px !important;
+  }
+  .composer-bottom {
+    gap: 5px !important;
+  }
+  .content-heading-row #postPassword {
+    width: 66px !important;
+    min-width: 66px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    font-size: 11px !important;
+  }
+  .post { align-items: center !important; }
+  .post .heart-count { align-self: center !important; }
+}
+
 </style>
 </head>
 <body>
@@ -2141,4 +2218,81 @@ loadPosts();
 .footer { color:#a95766 !important; }
 .footer::before { content:"♥  "; color:#c49a42; }
 .footer::after { content:"  ♥"; color:#c49a42; }
+
+
+/* ===== 2026-11-27 추가 요청 반영 ===== */
+/* 부제목을 한 단계 아래로 내리고 줄바꿈 문장 간격은 좁힘 */
+.site-subtitle {
+  margin-top: 28px !important;
+  line-height: 1.25 !important;
+  transform: none !important;
+}
+/* 마음 전하기·고백하기 문구는 상대방 닉네임 라벨보다 한 단계 크게 */
+.composer::before {
+  font-size: 16px !important;
+}
+.composer-bottom .submit {
+  font-size: 16px !important;
+}
+/* 닉네임 입력과 고백 내용 영역 사이 간격 축소 */
+.composer-top {
+  margin-bottom: 5px !important;
+}
+.composer-bottom {
+  gap: 6px !important;
+}
+/* 고백 비밀번호 입력칸을 댓글 비밀번호와 같은 크기로 맞추고
+   고백 내용 입력 영역의 오른쪽 끝에 정렬 */
+.content-heading-row {
+  align-items: flex-end !important;
+  gap: 8px !important;
+}
+.content-heading-row #postPassword {
+  width: 66px !important;
+  min-width: 66px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 4px 3px !important;
+  font-size: 11px !important;
+  margin-left: auto !important;
+  margin-bottom: 0 !important;
+  box-sizing: border-box !important;
+}
+/* 게시글 하트 원형을 게시글 카드 세로 중앙에 배치 */
+.post {
+  align-items: center !important;
+}
+.post .heart-count {
+  align-self: center !important;
+  margin-top: 0 !important;
+}
+@media (max-width:700px) {
+  .site-subtitle {
+    margin-top: 26px !important;
+    line-height: 1.25 !important;
+    transform: none !important;
+  }
+  .composer::before {
+    font-size: 15px !important;
+  }
+  .composer-bottom .submit {
+    font-size: 15px !important;
+  }
+  .composer-top {
+    margin-bottom: 4px !important;
+  }
+  .composer-bottom {
+    gap: 5px !important;
+  }
+  .content-heading-row #postPassword {
+    width: 66px !important;
+    min-width: 66px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    font-size: 11px !important;
+  }
+  .post { align-items: center !important; }
+  .post .heart-count { align-self: center !important; }
+}
+
 </style>
