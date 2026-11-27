@@ -1789,6 +1789,59 @@ input:focus,textarea:focus{outline:2px solid rgba(207,130,139,.22)!important;bor
   }
 }
 </style>
+
+<style id="mobile-webview-password-fix">
+/* 모바일 앱 내장 브라우저(뷰포트가 700px보다 크게 잡히는 경우 포함)에서
+   고백 내용 라벨과 비밀번호 입력칸이 한 줄에 표시되도록 고정 */
+@media (max-width: 900px) {
+  .composer-bottom {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+  }
+  .content-heading-row {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .content-heading-row .content-label {
+    display: block !important;
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
+  }
+  .content-heading-row #postPassword {
+    display: block !important;
+    position: static !important;
+    flex: 0 0 118px !important;
+    width: 118px !important;
+    min-width: 118px !important;
+    max-width: 118px !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    font-size: 13px !important;
+    text-align: center !important;
+  }
+  #content {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .composer-bottom .submit {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+}
+</style>
 </head>
 <body>
 <main class="page">
