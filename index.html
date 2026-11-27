@@ -1737,6 +1737,58 @@ input:focus,textarea:focus{outline:2px solid rgba(207,130,139,.22)!important;bor
 }
 </style>
 
+
+<style id="password-align-final-fix">
+/* 최종 수정: 고백 비밀번호 입력칸의 왼쪽 시작점을 닉네임 입력칸과 동일하게 정렬 */
+.composer-top {
+  display: grid !important;
+  grid-template-columns: 145px minmax(0, 1fr) !important;
+  column-gap: 12px !important;
+}
+.content-heading-row {
+  display: grid !important;
+  grid-template-columns: 145px minmax(0, 1fr) !important;
+  column-gap: 12px !important;
+  align-items: center !important;
+  justify-content: initial !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+.content-heading-row .content-label {
+  grid-column: 1 !important;
+  justify-self: start !important;
+  margin: 0 !important;
+}
+.content-heading-row #postPassword {
+  grid-column: 2 !important;
+  justify-self: start !important;
+  align-self: center !important;
+  flex: none !important;
+  width: 118px !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+@media (max-width: 700px) {
+  .composer-top {
+    grid-template-columns: 105px minmax(0, 1fr) !important;
+    column-gap: 8px !important;
+  }
+  .content-heading-row {
+    grid-template-columns: 105px minmax(0, 1fr) !important;
+    column-gap: 8px !important;
+  }
+  .content-heading-row #postPassword {
+    grid-column: 2 !important;
+    width: 66px !important;
+    min-width: 0 !important;
+    height: 33px !important;
+    min-height: 33px !important;
+    font-size: 11px !important;
+  }
+}
+</style>
 </head>
 <body>
 <main class="page">
