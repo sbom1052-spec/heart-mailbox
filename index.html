@@ -2924,5 +2924,48 @@ loadPosts();
 }
 </style>
 
+
+
+<style id="password-only-position-adjustment">
+/* 닉네임 입력칸의 위치/크기는 건드리지 않고, 비밀번호 입력칸만 닉네임 입력칸 시작선에 맞춤 */
+#confessionForm .composer-top {
+  /* 기존 닉네임 행의 배치 유지 */
+}
+#confessionForm .composer-bottom .content-heading-row {
+  display: grid !important;
+  grid-template-columns: 145px minmax(0, 1fr) !important;
+  column-gap: 12px !important;
+  align-items: center !important;
+  justify-content: initial !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  gap: 0 12px !important;
+}
+#confessionForm .composer-bottom .content-heading-row .content-label {
+  grid-column: 1 !important;
+  justify-self: start !important;
+  margin: 0 !important;
+}
+#confessionForm .composer-bottom .content-heading-row #postPassword {
+  grid-column: 2 !important;
+  justify-self: start !important;
+  align-self: center !important;
+  margin: 0 !important;
+  width: 66px !important;
+  min-width: 66px !important;
+  max-width: 66px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  box-sizing: border-box !important;
+}
+@media (max-width: 700px) {
+  #confessionForm .composer-bottom .content-heading-row {
+    grid-template-columns: 105px minmax(0, 1fr) !important;
+    column-gap: 8px !important;
+    gap: 0 8px !important;
+  }
+}
+</style>
+
 </body>
 </html>
