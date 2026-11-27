@@ -2681,6 +2681,36 @@ loadPosts();
 }
 </style>
 
+
+
+<style>
+/* 게시글 본문은 카드 안에서 세로 가운데에 두되, 글자는 왼쪽 정렬 유지 */
+.post {
+  align-items: center !important;
+}
+.post .post-main {
+  align-self: center !important;
+  justify-self: stretch !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  text-align: left !important;
+}
+.post .post-head,
+.post .post-content {
+  text-align: left !important;
+}
+.post .post-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+@media (max-width:700px) {
+  .post { align-items: center !important; }
+  .post .post-main { align-self: center !important; }
+}
+</style>
 </body>
 </html>
 
