@@ -2296,3 +2296,19 @@ loadPosts();
 }
 
 </style>
+
+<style>
+/* 고백하기 버튼 크기 조정: 직접 수정할 때 이 숫자만 바꾸면 됩니다 */
+.composer-bottom .submit {
+  height:38px !important;      /* 세로 크기: 기존보다 2px 증가 */
+  min-height:38px !important;
+  padding:0 20.5px !important; /* 가로 크기: 현재보다 총 5px 증가 */
+}
+@media (max-width:700px) {
+  .composer-bottom .submit {
+    height:34px !important;    /* 모바일 세로 크기: 기존보다 2px 증가 */
+    min-height:34px !important;
+    padding:0 18.5px !important; /* 모바일 가로 크기: 현재보다 총 5px 증가 */
+  }
+}
+</style>
