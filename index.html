@@ -1842,6 +1842,65 @@ input:focus,textarea:focus{outline:2px solid rgba(207,130,139,.22)!important;bor
   }
 }
 </style>
+<style id="password-row-hard-fix-20261127">
+/* 고백 내용 제목과 비밀번호를 항상 같은 줄에 배치 (모바일 앱 내장 브라우저 포함) */
+#confessionForm .composer-bottom {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: auto auto auto !important;
+  align-items: start !important;
+  gap: 8px !important;
+}
+#confessionForm .composer-bottom .content-heading-row {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+#confessionForm .composer-bottom .content-heading-row .content-label {
+  display: block !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#confessionForm .composer-bottom .content-heading-row #postPassword {
+  display: block !important;
+  position: static !important;
+  float: none !important;
+  flex: 0 0 118px !important;
+  width: 118px !important;
+  min-width: 118px !important;
+  max-width: 118px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  margin: 0 !important;
+  padding: 5px 8px !important;
+  box-sizing: border-box !important;
+  text-align: center !important;
+}
+#confessionForm #content {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+#confessionForm .composer-bottom .submit {
+  grid-column: 1 !important;
+  grid-row: 3 !important;
+  justify-self: center !important;
+}
+</style>
 </head>
 <body>
 <main class="page">
