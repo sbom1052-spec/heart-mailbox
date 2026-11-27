@@ -2823,25 +2823,29 @@ loadPosts();
   .post .post-main { align-self: center !important; }
 }
 </style>
-</body>
-</html>
 
 <style>
-/* 최종 정렬: 고백 비밀번호 입력칸의 왼쪽 끝을 닉네임 입력칸과 일치 */
-.content-heading-row {
+/* 최종 위치 보정: 비밀번호 입력칸 왼쪽을 닉네임 입력 네모칸 왼쪽과 정확히 맞춤 */
+#confessionForm .composer-top,
+#confessionForm .content-heading-row {
   display: grid !important;
   grid-template-columns: 145px minmax(0, 1fr) !important;
   column-gap: 12px !important;
   align-items: center !important;
-  justify-content: initial !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+#confessionForm .composer-top #target {
+  grid-column: 2 !important;
+  justify-self: stretch !important;
   width: 100% !important;
   min-width: 0 !important;
 }
-.content-heading-row .content-label {
+#confessionForm .content-heading-row .content-label {
   grid-column: 1 !important;
   margin: 0 !important;
 }
-.content-heading-row #postPassword {
+#confessionForm .content-heading-row #postPassword {
   grid-column: 2 !important;
   justify-self: start !important;
   width: 118px !important;
@@ -2849,13 +2853,76 @@ loadPosts();
   margin: 0 !important;
   box-sizing: border-box !important;
 }
-@media (max-width:700px) {
-  .content-heading-row {
+@media (max-width: 700px) {
+  #confessionForm .composer-top,
+  #confessionForm .content-heading-row {
     grid-template-columns: 105px minmax(0, 1fr) !important;
     column-gap: 8px !important;
   }
-  .content-heading-row #postPassword {
+  #confessionForm .content-heading-row #postPassword {
     width: 66px !important;
   }
 }
 </style>
+
+<style>
+/* 고백 비밀번호 입력칸: 댓글 비밀번호와 동일한 크기, 닉네임 입력칸 시작선에 정렬 */
+#confessionForm .composer-top {
+  display: grid !important;
+  grid-template-columns: 145px minmax(0, 1fr) !important;
+  column-gap: 12px !important;
+}
+#confessionForm .composer-top #target {
+  grid-column: 2 !important;
+}
+#confessionForm .content-heading-row {
+  display: grid !important;
+  grid-template-columns: 145px minmax(0, 1fr) !important;
+  column-gap: 12px !important;
+  align-items: center !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+#confessionForm .content-heading-row .content-label {
+  grid-column: 1 !important;
+  margin: 0 !important;
+}
+#confessionForm .content-heading-row #postPassword {
+  grid-column: 2 !important;
+  justify-self: start !important;
+  width: 68px !important;
+  min-width: 68px !important;
+  max-width: 68px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 4px 3px !important;
+  font-size: 11px !important;
+  text-align: center !important;
+}
+@media (max-width: 700px) {
+  #confessionForm .composer-top,
+  #confessionForm .content-heading-row {
+    grid-template-columns: 105px minmax(0, 1fr) !important;
+    column-gap: 8px !important;
+  }
+  #confessionForm .content-heading-row #postPassword {
+    width: 66px !important;
+    min-width: 66px !important;
+    max-width: 66px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+  }
+}
+@media (max-width: 360px) {
+  #confessionForm .content-heading-row #postPassword {
+    width: 58px !important;
+    min-width: 58px !important;
+    max-width: 58px !important;
+  }
+}
+</style>
+
+</body>
+</html>
