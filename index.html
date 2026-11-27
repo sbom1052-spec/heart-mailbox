@@ -1245,6 +1245,117 @@ input:focus,textarea:focus{outline:2px solid rgba(207,130,139,.22)!important;bor
  .comment-toggle-row{width:100%!important;margin:6px 0 3px!important}
 }
 
+
+/* ===== 앱 화면 최종 조정 ===== */
+.site-subtitle { margin-top:26px !important; }
+.composer-top {
+  display:grid !important;
+  grid-template-columns:145px minmax(0,1fr) !important;
+  gap:12px !important;
+  align-items:center !important;
+}
+.composer-bottom {
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:10px !important;
+  align-items:stretch !important;
+}
+.content-heading-row {
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:14px;
+  min-width:0;
+}
+.content-heading-row .field-label { flex:0 0 auto; }
+.content-heading-row #postPassword {
+  width:118px !important;
+  min-width:0 !important;
+  height:36px !important;
+  padding:6px 10px !important;
+  font-size:13px !important;
+  margin-left:auto;
+}
+#content {
+  grid-column:auto !important;
+  grid-row:auto !important;
+  width:100% !important;
+  height:100px !important;
+  min-height:100px !important;
+  font-family:"Gowun Dodum",sans-serif !important;
+}
+.composer-bottom .submit {
+  grid-column:auto !important;
+  grid-row:auto !important;
+  height:64px !important;
+}
+#target, #postPassword, #content,
+#target::placeholder, #postPassword::placeholder, #content::placeholder {
+  font-family:"Gowun Dodum",sans-serif !important;
+}
+.target-name, .post-content {
+  font-family:"Gowun Dodum",sans-serif !important;
+  text-align:left !important;
+}
+.post-head {
+  justify-content:flex-start !important;
+  text-align:left !important;
+}
+.post-content { margin-left:0 !important; }
+.post-main { text-align:left !important; }
+
+@media(max-width:700px) {
+  body {
+    background-size:100% auto !important;
+    background-position:center top !important;
+    background-repeat:repeat-y !important;
+    background-attachment:scroll !important;
+    background-color:#f5d9d5 !important;
+  }
+  .site-heading {
+    min-height:225px !important;
+    padding:35px 8px 25px !important;
+  }
+  .site-subtitle {
+    margin-top:25px !important;
+    line-height:1.7 !important;
+  }
+  .composer-top {
+    grid-template-columns:105px minmax(0,1fr) !important;
+    gap:8px !important;
+  }
+  .composer-bottom {
+    grid-template-columns:minmax(0,1fr) !important;
+    gap:9px !important;
+  }
+  .content-heading-row { gap:8px; }
+  .content-heading-row #postPassword {
+    width:105px !important;
+    height:34px !important;
+    font-size:12px !important;
+    padding:5px 8px !important;
+  }
+  #content {
+    height:86px !important;
+    min-height:86px !important;
+    font-size:14px !important;
+  }
+  .composer-bottom .submit { height:54px !important; }
+  .post-head {
+    flex-direction:row !important;
+    align-items:flex-start !important;
+    justify-content:flex-start !important;
+    gap:8px !important;
+    padding-right:0 !important;
+  }
+  .target-name { font-size:17px !important; }
+  .post-content { font-size:15px !important; }
+}
+@media(max-width:360px) {
+  .content-heading-row #postPassword { width:92px !important; }
+  .content-heading-row { gap:6px; }
+}
+
 </style>
 </head>
 <body>
@@ -1259,14 +1370,15 @@ input:focus,textarea:focus{outline:2px solid rgba(207,130,139,.22)!important;bor
     <form id="confessionForm">
       <div class="composer-top">
         <label class="field-label" for="target">상대방 닉네임</label>
-        <input id="target" type="text" maxlength="40" placeholder="고백하고 싶은 상대방 닉네임을 입력하세요." required>
-        <label class="field-label password-label" for="postPassword">비밀번호</label>
-        <input id="postPassword" type="password" minlength="4" maxlength="50"
-          autocomplete="new-password" placeholder="글 삭제 시 사용할 비밀번호(4자리 이상)" required
-          aria-label="게시글 비밀번호">
+        <input id="target" type="text" maxlength="40" placeholder="예) 고니, 수니 등" required>
       </div>
       <div class="composer-bottom">
-        <label class="field-label content-label" for="content">고백 내용</label>
+        <div class="content-heading-row">
+          <label class="field-label content-label" for="content">고백 내용</label>
+          <input id="postPassword" type="password" minlength="4" maxlength="50"
+            autocomplete="new-password" placeholder="비밀번호" required
+            aria-label="게시글 비밀번호">
+        </div>
         <textarea id="content" maxlength="1500"
           placeholder="마음속 이야기를 솔직하게 적어보세요. ♡" required></textarea>
         <button class="submit" id="submitButton" type="submit">♡ 고백하기</button>
