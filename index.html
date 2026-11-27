@@ -2322,3 +2322,73 @@ loadPosts();
   }
 }
 </style>
+
+
+<style>
+/* 게시글 하트는 닉네임 왼쪽 첫 줄에 맞추고, 내용은 하트 원의 중앙 높이에 가깝게 배치 */
+.post {
+  align-items: start !important;
+  grid-template-columns: 76px minmax(0, 1fr) !important;
+}
+.post .heart-count {
+  align-self: start !important;
+  justify-self: start !important;
+  margin-top: 0 !important;
+}
+.post .post-main {
+  align-self: start !important;
+  min-width: 0 !important;
+}
+.post .post-head {
+  align-items: flex-start !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.post .post-content {
+  margin-top: 2px !important;
+  margin-bottom: 7px !important;
+  line-height: 1.45 !important;
+}
+@media (max-width:700px) {
+  .post {
+    align-items: start !important;
+    grid-template-columns: 48px minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+  .post .heart-count {
+    align-self: start !important;
+    margin-top: 0 !important;
+  }
+  .post .post-head { margin-top: 0 !important; }
+  .post .post-content { margin-top: 2px !important; }
+}
+</style>
+
+<style>
+/* 고백 비밀번호 입력칸을 닉네임 입력칸의 시작 위치에 맞춤 */
+.content-heading-row {
+  display: grid !important;
+  grid-template-columns: 145px minmax(0, 1fr) !important;
+  column-gap: 12px !important;
+  align-items: center !important;
+  min-height: 33px !important;
+}
+.content-heading-row #postPassword {
+  grid-column: 2 !important;
+  justify-self: start !important;
+  margin: 0 !important;
+  height: 33px !important;
+  min-height: 33px !important;
+  box-sizing: border-box !important;
+}
+@media (max-width:700px) {
+  .content-heading-row {
+    grid-template-columns: 105px minmax(0, 1fr) !important;
+    column-gap: 8px !important;
+  }
+  .content-heading-row #postPassword {
+    height: 33px !important;
+    min-height: 33px !important;
+  }
+}
+</style>
